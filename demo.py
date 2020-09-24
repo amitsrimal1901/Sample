@@ -68,6 +68,9 @@ def myFunc(e):
 cars = ['Ford', 'Mitsubishi', 'BMW', 'VW']
 cars.sort(reverse=True, key=myFunc)
 print(cars) ## ['Mitsubishi', 'Ford'', 'BMW', 'VW']
+## without using key
+cars.sort(reverse=True)
+print(cars) ## ['Mitsubishi', 'Ford'', 'BMW', 'VW'] ALPHABETICAL ORDER
 ------------------------------------------------------
 ## APPEND
 stack = ['a','b']
