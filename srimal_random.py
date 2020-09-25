@@ -9,7 +9,7 @@ age= int(input("Enter your age: ")) #1. Step 1 i/p numeric
 def cube_age(age): #2. Step2. function to perform certain operation
     return age**3
 y = cube_age(age) #3. Step 3.assigning function o/p to some other variable
-print ('Cube of your age',age,'is', y/4) # step 4. getting overall o/p as her
+print ('Cube of your age',age,'is', y) # step 4. getting overall o/p as her
 
 ------------------------------------------------------------------------------------------------------------
 ##TIME SERIES with airpassengers dataset
