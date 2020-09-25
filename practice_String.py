@@ -101,7 +101,7 @@ f9 = "{0:.3f}".format(33.134327429) ## 3.134
 # Roudnign off concept
 print(round(3.134327429, 4) ) ## 3.1343
 
-## SPLIT STRING
+#SPLIT STRING
 """
   str.split(regexp = "", limit = string.count(str))
     // regexp is the delimiting regular expression; (may be space, comma, dot etc. we may use) 
@@ -110,6 +110,8 @@ print(round(3.134327429, 4) ) ## 3.1343
 line = "Geek1 Geek2 Geek3";
 print (line.split()) # ['Geek1', 'Geek2', 'Geek3']
 print (line.split(' ', 1) ) #['Geek1', 'Geek2 Geek3']
+
+
 
 
 
