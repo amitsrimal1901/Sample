@@ -1,5 +1,11 @@
 
 #################### LIST ###### LIST ###### LIST ###### LIST ###### LIST ###### LIST ###### LIST ###### LIST ###### LIST
+#  A single list may contain DataTypes like Integers, Strings, as well as Objects.
+#  Lists are mutable, and hence, they can be altered even after their creation.
+blnk_list=[] # a blank list
+print(type(blnk_list)) # <class 'list'>
+# to add value, we may use insert/ extend/ append methods
+
 my_list=['Amit',45,'$',56.09,['Srimal',45.7]] ## nested list
 print(my_list) ##['Amit',45,'$',56.09,['Srimal',45.7]]
 ##Type info of list item wise
@@ -22,6 +28,15 @@ print(f_name)  ##['Amit', 'Annu', 'Cocoon',34, 30, 2]
 ## update any index value
 my_list[1]=46
 print(my_list) ## ['Amit', 46, '$', 56.09, ['Srimal', 45.7]]
+#Size of list, typically means LENGTH
+print(len(my_list)) # 6 , consider list inside list as 1 element; if if that consist of many items: ['Amit', 46, [34, 6.7, 'Cycle'], 'RoyalEnfield', 56.09, ['Srimal', 45.7]]
+
+"""
+ADDING Elements to a List:
+Using append() method
+Using insert() method
+Using extend() method
+"""
 ##add new items to list
 my_list.append('Kumar')
 print(my_list) # ['Amit', 46, '$', 56.09, ['Srimal', 45.7], 'Kumar']
@@ -74,6 +89,7 @@ print(cars) ## ['Mitsubishi', 'Ford'', 'BMW', 'VW']
 cars.sort(reverse=True)
 print(cars) ## ['Mitsubishi', 'Ford'', 'BMW', 'VW'] ALPHABETICAL ORDER
 ------------------------------------------------------
+
 ## APPEND
 stack = ['a','b']
 stack.append('c') # append one item
@@ -87,3 +103,24 @@ print(stack) ## ['a', 'b', 'c']
 stack.extend(['e','f']) # extends List
 print(stack) ## ['a', 'b', 'c', 'e', 'f']
 
+## CLEAR list
+list2= [1,2,4,5,56]
+list2.clear()
+print(list2) ## create a blank List as []
+## INDEX()
+# It's an inbuilt function in Python, which searches for a given element from the start of the list and returns the lowest index where the element appears.
+list3= [56, 564,232,1,2,4,5,564,4] # lets search for 4
+print(list3.index(4)) # returns 5 as index.
+## COUNT: 	Returns the count of number of items passed as an argument
+list3.count(4) # 2 as 4 is repeated twice in list3
+##REVERSE(): Reverse the order of items in the list
+list3.reverse()
+print(list3) # Reversed order : [4, 564, 5, 4, 2, 1, 232, 564, 56]
+
+## COPY: Returns a copy of the list
+list3_copy=list3
+print(list3_copy) # [4, 564, 5, 4, 2, 1, 232, 564, 56] COPY of Original list is returned
+
+## LIST COMPARSION funciton cmp()
+# This function returns 1, if first list is “greater” than second list, -1 if first list is smaller than the second list else it returns 0 if both the lists are equal.
+#NOTE: Got decapricated for Python 3, only works with Python 2
