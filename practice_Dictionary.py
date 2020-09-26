@@ -123,5 +123,5 @@ import collections
 defdict_dict1 = collections.defaultdict(lambda : 'Key Not found')
 #Step3: Check with dict1 {'fname': 'Amit', 'l_name': 'Srimal', 'age': 33, 'city': 'Bengaluru'}
 print(defdict_dict1['Contact']) # Key Not found
-##IMP: seeting defailt dict has impact on the original doctionary, see below
+##IMP: setting default dict has impact on the original doctionary, see below
 print(dict1) # {'fname': 'Amit', 'l_name': 'Srimal', 'age': 33, 'city': 'Bengaluru'}
