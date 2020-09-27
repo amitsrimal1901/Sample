@@ -26,11 +26,19 @@
 #Numpy’s array class is called ndarray. It is also known by the alias array. Note that numpy.array is not the
 #same as the Standard Python Library class array.array, which only handles one-dimensional arrays and offers
 #less functionality.
+'''
+Difference between RANGE and ARANGE functions
+The main difference between the two is that range is a built-in Python class, while arange() is a function that belongs to a third-party library (NumPy).
+In addition, their purposes are different! Generally, range is more suitable when you need to iterate using the Python for loop.
+If you want to create a NumPy array, and apply fast loops under the hood, then arange() is a much better solution.
+'''
 
+##Method1: DEFINING ARRAY by importing Array package
 #Array needs to be declared for usage:
 import array
 arr = array.array('i', [1, 2, 3]) 
 print (arr) # array('i', [1, 2, 3])
+type(arr) # <class 'array.array'>
 
 #The more important attributes of an ndarray object are:
 #1. ndarray.ndim: the number of axes (dimensions) of the array
@@ -40,25 +48,26 @@ print (arr) # array('i', [1, 2, 3])
 #5. ndarray.itemsize: the size in bytes of each element of the array.
 #6. ndarray.data: the buffer containing the actual elements of the array.
 
+##Method2: DEFINING ARRAY by importing Numpy package
 import numpy as np
-a = np.arange(15).reshape(3, 5)
+a = np.arange(15).reshape(3, 5) # use arange(1,16) for values from 1 to 15 in the array
 print(a) # numpy.ndarray
-type(a)
+type(a) # <class 'numpy.ndarray'>
 a.shape # 3 by 5
-a.size # a5 elements in here
+a.size # 15 elements in here
 a.ndim # o/p is 2
 a.dtype.name # int32
-a.itemsize
+a.itemsize  #4  Bytes
 
 # for a single dimension array
 b=np.arange(3)
-print (b)
+print (b) # [0 1 2]
 b.ndim # o/p is 1
 b.shape # o/p is (3L,)
 
 #Array Creation
 a1 = np.array([2,3,4])   ## Wrong np.array(2,3,4)
-print (a1)
+print (a1) # default datatype is integer & numpy identify on its down. No need to specify like we do in ARRAY module
 type(a1) # numpy.ndarray
 a2 = np.array([(1.5,2,3), (4,5,7)]) 
 print (a2)
