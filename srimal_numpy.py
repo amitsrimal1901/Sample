@@ -32,6 +32,8 @@ The main difference between the two is that range is a built-in Python class, wh
 In addition, their purposes are different! Generally, range is more suitable when you need to iterate using the Python for loop.
 If you want to create a NumPy array, and apply fast loops under the hood, then arange() is a much better solution.
 '''
+## array: array.array
+## numpy: arange(last number not included), zeros, ones, empty, linspace(last number included)
 
 ##Method1: DEFINING ARRAY by importing Array package
 #Array needs to be declared for usage:
@@ -69,29 +71,42 @@ b.shape # o/p is (3L,)
 a1 = np.array([2,3,4])   ## Wrong np.array(2,3,4)
 print (a1) # default datatype is integer & numpy identify on its down. No need to specify like we do in ARRAY module
 type(a1) # numpy.ndarray
-a2 = np.array([(1.5,2,3), (4,5,7)]) 
+a2 = np.array([(1.5,2,3), (4,5,7)]) # Can we np.array([[1.5,2,3], [4,5,7]])
 print (a2)
 a21 = np.array([(1.5,2,3), (4,5)]) # allows array creation even if different count of elements in both set, but size gets impacted
 print (a21)
 a21.shape # o/p is (2L,)
+'''
+Defining array wioth different local, set, list and tuple
+a1=np.array(2,3,5,6) # TypeError
+a1= a1= np.array((2,3,5,6)) # [2 3 5 6] |  <class 'numpy.ndarray'> | Shape (4,)
+a1= np.array([2,3,5,6]) # [2 3 5 6] | <class 'numpy.ndarray'> | Shape (4,)
+a1=np.array({4,5,6,7}) # {4, 5, 6, 7} <class 'numpy.ndarray'> | Shape () | Dim 0 :--> cant use sets to make numpy array
+'''
 #array transforms sequences of sequences into two-dimensional arrays, sequences of sequences of sequences into
 #three-dimensional arrays, and so on.
 a3 = np.array( [ [1,2], [3,4] ], dtype=complex ) #defining data type at run time
+print(a3) # 1+oj and so on
 a3.shape #o/p is (2L,2L)
-##Array creation with PLACEHOLDER
+
+##Method3: DEFINING ARRAY usimg ZERO/ ONES/ EMPTY
+##Such concept is called Array creation with PLACEHOLDER(0/1 is placeholder in array)
 #By default, the dtype of the created array is float64.
-np.zeros( (3,4) ) #arrays full of ZERO
+## DOUBLE bracket is necessary, either () or [] in the defualt syntax
+np.zeros( (3,4) ) #arrays full of ZERO # np.zeros( [3,4] )
 np.zeros( (3,4,5) ) #arrays full of ZERO, but different dimension
 np.ones( (2,3,4), dtype=np.int16 )  # dtype can also be specified
 np.empty( (2,3) )  #uninitialized, output may vary
 
 ##Create Sequence
-np.arange( 10, 30, 5 )
+np.arange( 10, 30, 5 ) # array([10, 15, 20, 25]) -->> last value is not included
 np.arange( 0, 2, 0.3 ) # it accepts float arguments
 
+##Method4: DEFINING ARRAY by linspace() fuction
 ##function LINSPACE: that receives as an argument the number of elements that we want, instead of the step:
-from numpy import pi
-np.linspace( 0, 2, 9 ) # 9 numbers from 0 to 2 (including 0 & 2 both)
+# from numpy import pi
+np.linspace( 0, 2, 9 ) # 9 numbers from 0 to 2 ## Last number is included as its creatimng PARTS as opposed to arange
+# array([0.  , 0.25, 0.5 , 0.75, 1.  , 1.25, 1.5 , 1.75, 2.  ])
 
 a4 = np.arange(6) # 1d array
 a5 = np.arange(12).reshape(4,3) # 2d array
