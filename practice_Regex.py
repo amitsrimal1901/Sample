@@ -82,6 +82,29 @@ Output ‘abb’, is valid because of singe ‘a’ accompanied by 2 ‘b’.
 Output ‘a’, is valid because of singe ‘a’ accompanied by 0 ‘b’.
 Output ‘abbb’, is valid because of singe ‘a’ accompanied by 3 ‘b'''
 
+#### Sample5: Password Requirement
+# pasdword should have atleast one lowercase. uppercase,numeric, @#$ special charater symbol, 6 to 20 charaters long
+# importing re library
+import re
+def main():
+    passwd = 'Aeek12@244234'
+    reg = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!#%*?&]{6,20}$"
+        # ^ $ start, end of main string
+        # . matches any single character except the newline character.
+        # * Zero or more of the preceding character
+        # ?= ?= is a positive lookahead, a type of zero-width assertion. What it's saying is that the captured match must be followed by whatever is within the parentheses but that part isn't captured.
+    # compiling regex
+    pattern = re.compile(reg)
+    # searching regex
+    match = re.search(pattern, passwd)
+    # validating conditions
+    if match:
+        print("Password is valid.")
+    else:
+        print("Password invalid !!")
+        # Driver Code
+if __name__ == '__main__':
+    main()
 
 ## SPLITTING STRING
 # string by the occurrences of a character or a pattern, upon finding that pattern, the remaining characters from the string are returned as part of the resulting list.
