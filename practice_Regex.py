@@ -13,7 +13,6 @@ $   Matches the end
 {}  Indicate number of occurrences of a preceding RE to match.
 ()  Enclose a group of REs
 '''
-
 """
 OVERALL, we have SEARCH(), MATCH() AND FINDALL() built -in function in module re.
 1. re.match() method finds match if it occurs at start of the string.
@@ -171,6 +170,4 @@ Syntax: re.match(pattern, string, flags=0)
 #pattern : Regular expression to be matched.
 ##string : String where p attern is searched
 #flags : We can specify different flags using bitwise OR (|).'''
-
-
 
