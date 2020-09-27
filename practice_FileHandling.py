@@ -63,7 +63,7 @@ with open('C:/Users/amit_srimal/Desktop/Study/Python/Sample.txt',"a")as file_to_
 
 #********************************************************************************************************
 # Workign owth CSV files
-# For working CSV files in python, there is an inbuilt module called csv.
+# For READING CSV files in python, there is an inbuilt module called csv.
 ##METHOD1: Using csv.reader() class
 #step1: import the library
 import csv
@@ -72,11 +72,18 @@ with open('C:/Users/amit_srimal/Desktop/Study/Python/csvsample.csv',mode ='r') a
     read_csv=csv.reader(file) # used to read the Giants.csv file which maps the data into lists.
 #step3: start reading  the file line by line
     for i in read_csv:
-     print(i)
-file.close()
+        print(i) # prints entire list
+        print(type(i))  # <class 'list'>
+        print(i[0]) # print 0th index
+        print(type(i[0])) # <class 'str'>
 #NOTE: Indentation of all three steps are very important
+#Extracting field name and count of records on csvfile
+    csv_fields = next(read_csv)
+    print(csv_fields) # ['f_name', 'l_name']##works only for first iteration n then jump to next line
+    print('Field names are:' + ', '.join(field for field in csv_fields)) # Field names are:f_name, l_name
+    print(read_csv.line_num) #4 including header
 
-##METHOD2: Using csv.DictReader() class
+#METHOD2: Using csv.DictReader() class
 # THis class maps the information in the CSV file into a dictionary.
 #  The very first line of the file comprises of dictionary keys.
 import csv
@@ -85,32 +92,29 @@ with open('C:/Users/amit_srimal/Desktop/Study/Python/csvsample.csv',mode ='r') a
     for i in file:
         print(i)
 
-## METHOD3: Using Pandas
+# METHOD3: Using Pandas
 import pandas as pd
 data_file=pd.read_csv('C:/Users/amit_srimal/Desktop/Study/Python/csvsample.csv')
 print(data_file)
 # reads the Giants.csv file and maps its data into a 2D list.
 
+### FOR WRITING TO CSV
+import csv
+# feild name
+fields=['roll', 'subj','score']
+# data
+data=[[11,'computer',89],[23,'science',99]]
+# define filename
+file_name='C:/Users/amit_srimal/Desktop/Study/Python/scorecard.csv'
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+#write to taregt csv file now with data, field
+with open(file_name,'w') as csv_file_to_read:
+    # creating a csv writer object
+    csvwriter = csv.writer(csv_file_to_read)
+    # writing the fields into objects
+    csvwriter.writerow(fields)
+    # writing the data rows into objects
+    csvwriter.writerows(data)
 
 
 
