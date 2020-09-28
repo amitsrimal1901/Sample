@@ -1,5 +1,23 @@
 ########  ** MODEL ** ########
 #________________________________________________________________________________
+# Regression searches for relationships among variables.
+"""
+In ML models, the dependent variables as RESPONSE and independent variables as FEATURES.
+Consider several employees of some company and try to understand how their salaries(RESPONSE) depend on the FEATURES, such as experience, level of education, role, city they work in, and so on.
+This is a regression problem where data related to each employee represent one OBSERVATION.
+
+The dependent features are called the dependent variables, outputs, or responses.
+The independent features are called the independent variables, inputs, or predictors.
+
+Regression problems usually have one continuous and unbounded dependent variable.
+The inputs, however, can be continuous, discrete, or even categorical data such as gender, nationality, brand, and so on.
+
+# Why Regression is needed?
+We need regression to answer whether and how some phenomenon influences the other or how several variables are related.
+Among regression, LINEAR REGRESSION is the simplest regression methods.
+One of its main advantages is the ease of interpreting results.
+"""
+
 ## Linear regression on Edureka## 
     # Step 1: Find best fit regression line using Least Square Method
     # Step 2: Check goodness of fit using R squared method
@@ -7,10 +25,13 @@
         # 3.1. Linear regression using Python from scratch
         # 3.2. Linear regression using Python (scikit lib)
 ## Diff. b/w L&R based on accuracy & fitness of model 
-# linear(continous):measured by loss, R squared, adjusted r squared etc
+# linear(continuous):measured by loss, R squared, adjusted r squared etc
 # regression(categorical):measured by accuracy, precision, recall, F1 score, ROC curve, confusion matrix etc
 # supervised learning algorithm for solving regression based tasks.
-        
+
+# For linear regression, it is assumed that the two variables are LINEARLY RELATED.
+# Hence, we try to find a linear function that predicts the response value(y) as accurately as possible as a function of the feature or independent variable(x).
+
 ## linear Equation: y=mx+c where c is y intercept of line
 # m is positive and hence positive relationship b/w x & y
 # m is negative and hence negative relationship b/w x & y
@@ -41,7 +62,7 @@
 # ***** Relationship b/w mean, median, mode & range **** #
 # mean: regular meaning of "average"
 # median: middle value
-# mode: most often             
+# mode: most often/ frequency of most recurring number
 # say 13, 18, 13, 14, 13, 16, 14, 21, 13
 # mean= average ((13 + 18 + 13 + 14 + 13 + 16 + 14 + 21 + 13) ÷ 9 = 15)        
 # median= is the "middle" value in the list of ascending number ( (9 + 1) ÷ 2 = 10 ÷ 2 = 5th number)

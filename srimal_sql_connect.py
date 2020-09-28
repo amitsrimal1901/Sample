@@ -7,7 +7,7 @@ cnxn = pyodbc.connect('Driver={SQL Server};'
                       'Trusted_Connection=yes;')
 
 cursor = cnxn.cursor()
-cursor.execute("SELECT * FROM Sample.dbo.tbl_Employee")
+cursor.execute("SELECT * FROM Sample.dbo.Student")
 
 for row in cursor.fetchall():
     print(row)
@@ -20,7 +20,7 @@ cnxn = pyodbc.connect('Driver={SQL Server};'
                       'Trusted_Connection=yes;')
 
 cursor = cnxn.cursor()
-cursor.execute("update Sample.dbo.tbl_Employee set F_Name='Ashu132432' where Id= '712'")
+cursor.execute("update Sample.dbo.Student set F_Name='Ashu132432' where Id= '712'")
 cnxn.commit() ##required if user is making chnages in db objects. Else query will remain in INFINITE LOOP.
 # reading updates from target table
 cursor.execute("SELECT * FROM Sample.dbo.tbl_Employee")

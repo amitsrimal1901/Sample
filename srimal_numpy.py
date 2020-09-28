@@ -118,6 +118,7 @@ print(np.arange(10000))
 #To disable this behaviour and force NumPy to print the entire array, you can change the printing options using set_printoptions.
 np.set_printoptions(threshold='nan')
 
+
 ##Basic Operatons
 #The product operator * operates elementwise in NumPy arrays. The matrix product
 #can be performed using the dot function or method:
