@@ -99,6 +99,7 @@ print(y.shape) # (6,)
 model = LinearRegression()
 # this create an instance of the class LinearRegression, which will represent the regression model.
 # Has optional parameters to LinearRegression like fit_intercept, normalize etc.
+# if we want intercept as ZERO, then model = LinearRegression(fit_intercept=False)
 # Step4: start using the model.
 # First, you need to call .fit() on model:
 model.fit(x, y)
@@ -174,7 +175,124 @@ plt.title('Actual vs Predicted')
 plt.xlabel('x-axis for estimators')
 plt.ylabel('y-axis for responses')
 plt.show()
+
 #----------------------Polynomial Regression With scikit-learn ----------------------#
+# Polynomial Regression With scikit-learn#
+# Implementing polynomial regression with scikit-learn is very similar to linear regression.
+# There is only one extra step: you need to transform the array of inputs to INCLUDE NON-LINEAR TERMS terms such as 𝑥².
+
+###### Step 1: Import packages and classes
+import numpy as np
+from sklearn.linear_model import LinearRegression
+from sklearn.preprocessing import PolynomialFeatures
+###### Step 2a: Provide data
+x = np.array([5, 15, 25, 35, 45, 55]).reshape((-1, 1)) # input to be a two-dimensional array, hence .reshape() is used.
+y = np.array([15, 11, 2, 8, 25, 32])
+##### Step 2b: Transform input data
+# In ploynomail, we need to include 𝑥² & higher orders.
+# SO we need to transform the input array x to contain the additional column(s) with the values of 𝑥² (and eventually more features).
+# It’s possible to transform the input array in several ways (like using insert() from numpy), but the class PolynomialFeatures is very convenient for this purpose.
+transformer = PolynomialFeatures(degree=2, include_bias=False) # creates instance of polynomail features
+'''Important parameter of above queation
+        1. degree is an integer (2 by default) that represents the degree of the polynomial regression function.
+        2. interaction_only is a Boolean (False by default) that decides whether to include only interaction features (True) or all features (False).
+        3. include_bias is a Boolean (True by default) that decides whether to include the bias (intercept) column of ones (True) or not (False).'''
+
+# Next we will fit the transformer with .fit() method
+transformer.fit(x)
+# Once transformer is fitted, it’s ready to create a new, modified input. You apply .transform() to do that
+x_ = transformer.transform(x)
+## Alternatively
+# we can use single step using .fit_transform() to include transformer->fitting->transform
+x_ = PolynomialFeatures(degree=2, include_bias=False).fit_transform(x)
+## if include_bias is set TRUE, then the first column of x_ contains ones, the second has the values of x, while the third holds the squares of x.
+print(x_) # [[   5.   25.]... [  25.  625.]]
+#IMPORTANT:The modified input array contains two columns: one with the original inputs and the other with their squares as include_bias=FALSE.
+print(type(x_)) # <class 'numpy.ndarray'>
+
+##### Step3 : Create a model and fit it
+model = LinearRegression().fit(x_, y)
+##### Step4: Get results
+r_sq = model.score(x_, y)
+print('coefficient of determination:', r_sq) #  0.8908516262498564
+print('intercept:', model.intercept_) #  21.37232142857146
+print('coefficients:', model.coef_) # [-1.32357143  0.02839286]
+
+##### Step 5: Predict response
+y_predict = model.predict(x_)
+print('predicted response:', y_predict, sep='\n')
+# [15.46428571  7.90714286  6.02857143  9.82857143 19.30714286 34.46428571]
+
+##### Step 6: Plot
+import matplotlib.pyplot as plt
+fig = plt.figure(figsize = (10, 5))
+plt.plot(x_, y_predict,'b',label='Predicted')
+plt.plot(x_, y, 'r-.',label='Actaul') # r-. is for dotted, red color, 'b' for blue & 'g:' for green
+plt.title('Actual vs Predicted')
+plt.xlabel('x-axis for estimators')
+plt.ylabel('y-axis for responses')
+plt.show()
+
+"""You can also notice that polynomial regression yielded a higher coefficient of determination than multiple linear regression for the same problem. 
+At first, you could think that obtaining such a large 𝑅² is an excellent result. It might be.
+However, in real-world situations, having a complex model and 𝑅² very close to 1 might also be a sign of overfitting. 
+To check the performance of a model, you should test it with new data, that is with observations not used to fit (train) the model."""
+
+
+#----------------------Advanced Linear Regression With statsmodels ----------------------#
+'''
+We can implement linear regression in Python relatively easily by using the package statsmodels as well. 
+Typically, this is desirable when there is a need for more detailed results.
+The procedure is similar to that of scikit-learn.'''
+##### Step1: Import packages
+import numpy as np
+import statsmodels.api as sm
+
+##### Step 2: Provide data and transform inputs
+x = [[0, 1], [5, 1], [15, 2], [25, 5], [35, 11], [45, 15], [55, 34], [60, 35]]
+y = [4, 5, 20, 14, 32, 22, 38, 43]
+x, y = np.array(x), np.array(y)
+'''The input and output arrays are created, but the job is not done yet.
+We need to add the column of ones to the inputs if you want statsmodels to calculate the intercept 𝑏₀. 
+It doesn’t takes 𝑏₀ into account by default. This is just one function call:'''
+x = sm.add_constant(x)
+print(x) # [[ 1.  0.  1.].. [ 1.  5.  1.]..]
+# That’s how you add the column of ones to x with add_constant()
+# It takes the input array x as an argument and returns a new array with the column of ones inserted at the beginning.
+print(type(x)) # <class 'numpy.ndarray'>
+# modified x has three columns: the first column of ones (corresponding to 𝑏₀ and replacing the intercept) as well as two columns of the original features.
+
+##### Step 3: Create a model and fit it
+# The regression model based on OLS ORDINARY LEAST SQUARES is an instance of the class statsmodels.regression.linear_model.OL
+model = sm.OLS(y, x) # notice that the first argument is the output, followed with the input.
+# Once your model is created, you can apply .fit() on
+results = model.fit()
+'''By calling .fit(), you obtain the variable results, which is an instance of the class statsmodels.regression.linear_model.RegressionResultsWrapper. 
+This object holds a lot of information about the regression model.'''
+
+##### Step 4: Get results
+print(results.summary())
+#NOTE: Might obtain the warning related to kurtosistest. This is due to the small number of observations provided.
+print('coefficient of determination:', results.rsquared)
+print('adjusted coefficient of determination:', results.rsquared_adj)
+print('regression coefficients:', results.params) # refers the array with 𝑏₀, 𝑏₁, and 𝑏₂ respectively
+
+#### Step 5: Predict response :  .fittedvalues or .predict
+#obtain the predicted response on the input values used for creating the model using .fittedvalues or .predict() with the input array as the argument
+print('predicted response:', results.fittedvalues, sep='\n')
+print('predicted response:', results.predict(x), sep='\n')
+## Predict unknown when i/p is x_new
+# y_new = results.predict(x_new)
+
+###--------------------------------------------------------------------
+'''
+Beyond Linear Regression
+Linear regression is sometimes not appropriate, especially for non-linear models of high complexity.
+Fortunately, there are other regression techniques suitable for the cases where linear regression doesn’t work well. 
+Some of them are support vector machines, decision trees, random forest, and neural networks.
+'''
+
+
 
 
 
