@@ -33,7 +33,7 @@ The value 𝑅² = 1 corresponds to SSR = 0, that is to the perfect fit since th
 
 Multiple or MULTIVARIATE linear regression is a case of linear regression with two or more independent variables.
 If there are just two independent variables, the estimated regression function is 𝑓(𝑥₁, 𝑥₂) = 𝑏₀ + 𝑏₁𝑥₁ + 𝑏₂𝑥₂.
-It represents a regression plane in a three-dimensional space.
+It represents a REGRESSION PLANE in a three-dimensional space.
 The goal of regression is to determine the values of the weights 𝑏₀, 𝑏₁, and 𝑏₂ such that this plane is as close as possible to the actual responses and yield the minimal SSR.
 SAMPLE euqation: 𝑓(𝑥₁, …, 𝑥ᵣ) = 𝑏₀ + 𝑏₁𝑥₁ + ⋯ +𝑏ᵣ𝑥ᵣ
 
@@ -144,6 +144,37 @@ plt.show()
 # This means that you can use fitted models to calculate the outputs based on some other, new inputs
 
 #----------------------Multiple Linear Regression With scikit-learn ----------------------#
+import numpy as np
+from sklearn.linear_model import LinearRegression
+
+x = [[0, 1], [5, 1], [15, 2], [25, 5], [35, 11], [45, 15], [55, 34], [60, 35]] # NESTED list having feature set consist of two variables
+y = [4, 5, 20, 14, 32, 22, 38, 43] # LIST of resposne
+print(type(x)) #<class 'list'>
+print(type(y)) #<class 'list'>
+#Creating aaray for model operations
+x, y = np.array(x), np.array(y)
+
+model = LinearRegression().fit(x, y)
+r_sq = model.score(x, y)
+print('coefficient of determination:', r_sq) #  0.8615939258756775
+print('intercept:', model.intercept_) # slope intercept
+print('slope:', model.coef_) # [0.44706965 0.25502548] for slope1, slope2
+# converting to ulti-linear equation
+y_predict = model.intercept_ + np.sum(model.coef_ * x, axis=1)
+print('predicted response:', y_predict, sep='\n')
+
+y_predict = model.predict(x)
+print('predicted response:', y_predict, sep='\n')
+
+import matplotlib.pyplot as plt
+fig = plt.figure(figsize = (10, 5))
+plt.plot(x, y_predict,label='Predicted')
+plt.plot(x, y, 'r-.',label='Actaul') # r-. is for dotted, red color, 'b' for blue & 'g:' for green
+plt.title('Actual vs Predicted')
+plt.xlabel('x-axis for estimators')
+plt.ylabel('y-axis for responses')
+plt.show()
+#----------------------Polynomial Regression With scikit-learn ----------------------#
 
 
 
