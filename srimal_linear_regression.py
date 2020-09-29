@@ -16,8 +16,146 @@ The inputs, however, can be continuous, discrete, or even categorical data such 
 We need regression to answer whether and how some phenomenon influences the other or how several variables are related.
 Among regression, LINEAR REGRESSION is the simplest regression methods.
 One of its main advantages is the ease of interpreting results.
-"""
 
+The estimated or predicted response, 𝑓(𝐱ᵢ), for each observation 𝑖 = 1, …, 𝑛, should be as close as possible to the corresponding actual response 𝑦ᵢ.
+The differences 𝑦ᵢ - 𝑓(𝐱ᵢ) for all observations 𝑖 = 1, …, 𝑛, are called the RESIDUALS.
+Regression is about determining the best predicted weights, that is the weights corresponding to the smallest residuals.
+
+To get the best weights, you usually minimize the sum of squared residuals (SSR) for all observations 𝑖 = 1, …, 𝑛: SSR = Σᵢ(𝑦ᵢ - 𝑓(𝐱ᵢ))².
+This approach is called the method of ORDINARY LEAST SQUARES.
+
+REGRESSION PERFORMANCE:
+The variation of actual responses 𝑦ᵢ, 𝑖 = 1, …, 𝑛, occurs partly due to the dependence on the predictors 𝐱ᵢ.
+However, there is also an additional inherent variance of the output.
+The COEFFICIENT of DETERMINATION, denoted as 𝑅², tells you which amount of variation in 𝑦 can be explained by the dependence on 𝐱 using the particular regression model.
+Larger 𝑅² indicates a better fit and means that the model can better explain the variation of the output with different inputs.
+The value 𝑅² = 1 corresponds to SSR = 0, that is to the perfect fit since the values of predicted and actual responses fit completely to each other.
+
+Multiple or MULTIVARIATE linear regression is a case of linear regression with two or more independent variables.
+If there are just two independent variables, the estimated regression function is 𝑓(𝑥₁, 𝑥₂) = 𝑏₀ + 𝑏₁𝑥₁ + 𝑏₂𝑥₂.
+It represents a regression plane in a three-dimensional space.
+The goal of regression is to determine the values of the weights 𝑏₀, 𝑏₁, and 𝑏₂ such that this plane is as close as possible to the actual responses and yield the minimal SSR.
+SAMPLE euqation: 𝑓(𝑥₁, …, 𝑥ᵣ) = 𝑏₀ + 𝑏₁𝑥₁ + ⋯ +𝑏ᵣ𝑥ᵣ
+
+GOLDEN RULE for count of coefficient in any type of regression expression:
+If r=1 denotes simple linear regression, then no of coeff, is r+1.
+Similarly for binary its 2+1, and for higher order its r+1.
+
+POLYNOMIAL REGRESSION
+Polynomial regression are generalized case of linear regression.
+Here in addition to LINEAR terms like 𝑏₁𝑥₁, the regression function 𝑓 can include NON-LINEAR terms such as 𝑏₂𝑥₁², 𝑏₃𝑥₁³, or even 𝑏₄𝑥₁𝑥₂, 𝑏₅𝑥₁²𝑥₂,
+SAMPLE:Regression function is a polynomial of degree 2: 𝑓(𝑥) = 𝑏₀ + 𝑏₁𝑥 + 𝑏₂𝑥².
+
+WHEN TO USE linear vs polynomial regression?
+The general guideline is to use linear regression FIRST to determine whether it can fit the particular type of curve in your data.
+If you can't obtain an adequate fit using linear regression, that's when you might need to choose nonlinear regression.
+
+UNDERFITTING & OVERFITTING
+The choice of the optimal degree of the polynomial regression function.There is no straightforward rule for doing this.
+It depends on the case. You should, however, be aware of two problems that might follow the choice of the degree: underfitting and overfitting.
+UNDERFITTING: (low 𝑅²)
+occurs when a model can’t accurately capture the dependencies among data, usually as a consequence of its own simplicity.
+It often yields a low 𝑅² with known data and bad generalization capabilities when applied with new data.
+OVERFITTING:(high 𝑅²)
+happens when a model learns both dependencies among data and random fluctuations.
+In other words, a model learns the existing data too well.
+When applied to known data, such models usually yield high 𝑅².
+However, they often don’t generalize well and have significantly lower 𝑅² when used with new data.
+
+PYTHON PACKEGS FOR LINEAR REGRESSION
+1. NumPy is a fundamental Python scientific package that allows many high-performance operations on single- and multi-dimensional arrays.
+2. Package scikit-learn is a widely used Python library for machine learning, built on top of NumPy.
+It provides the means for preprocessing data, reducing dimensionality, implementing regression, classification, clustering, etc
+3. Consider statsmodels if ypu wamt to go beyond the scope of scikit-learn. It’s a powerful Python package for the estimation of statistical models, performing tests etc.
+
+FIVE BASIC STEPS for implementing linear regression:
+    step1: Import the packages and classes you need.
+    step2: Provide data to work with and eventually do appropriate transformations.
+    step3: Create a regression model and fit it with existing data.
+    step4: Check the results of model fitting to know whether the model is satisfactory.
+    step5: Apply the model for predictions. """
+
+
+#----------------------Simple Linear Regression With scikit-learn ----------------------#
+########## step1: Importing required class, packages
+import numpy as np
+from sklearn.linear_model import LinearRegression
+# class sklearn.linear_model.LinearRegression will be used to perform linear and polynomial regression and make predictions accordingly.
+##########  step2: Data to work on
+x = np.array([5, 15, 25, 35, 45, 55]).reshape((-1, 1)) # <class 'numpy.ndarray'> FEATURE
+# we called .reshape() on x because this array is required to be two-dimensional, or to be more precise, to have one column and as many rows as necessary.
+# That’s exactly what the argument (-1, 1) of .reshape() specifies.
+print(x)
+'''[[ 5]
+    [15]
+    [25]
+    [35]
+    [45]
+    [55]]'''
+y = np.array([5, 20, 14, 32, 22, 38]) # <class 'numpy.ndarray'> TARGET
+print(y) # [ 5 20 14 32 22 38]
+print(y.shape) # (6,)
+##########  step3: create model
+model = LinearRegression()
+# this create an instance of the class LinearRegression, which will represent the regression model.
+# Has optional parameters to LinearRegression like fit_intercept, normalize etc.
+# Step4: start using the model.
+# First, you need to call .fit() on model:
+model.fit(x, y)
+# With .fit(), we calculate the optimal values of the weights 𝑏₀ and 𝑏₁, using the existing input and output (x and y) as the arguments.
+# It returns self, which is the variable model itself. That’s why you can replace the last two statements with this one:
+model = LinearRegression().fit(x, y)
+print(type(model)) # <class 'sklearn.linear_model._base.LinearRegression'>
+########## step4: get results
+# obtain the coefficient of determination (𝑅²) with .score() called on model
+r_sq = model.score(x, y)
+print('coefficient of determination:', r_sq) #  0.7158756137479542
+# the model's intercept and coeff as below
+print('intercept:', model.intercept_) #  .intercept_ is a scalar;  5.633333333333329
+print('slope:', model.coef_) # .coef_ is an array as it handles b0, b1, b2 like # [0.54]
+#-------------------------
+##ADDITIONALLY we may provide y as a two-dimensional array instead of single as below
+new_model = LinearRegression().fit(x, y.reshape((-1, 1)))
+print('intercept:', new_model.intercept_) # .intercept_ is a one-dimensional array
+print('slope:', new_model.coef_) # .coef_ is a two-dimensional array with the single element 𝑏₁.
+#-------------------------
+######## Step 5: Predict response
+#Now use the model for predictions with either existing or new data using .predict() method.
+y_predict=model.predict(x) #----------------A
+print('predicted response:', y_predict, sep='\n') # [ 8.33333333 13.73333333 19.13333333 24.53333333 29.93333333 35.33333333]
+# When cmapred to linear equation :
+y_pred_equation = model.intercept_ + model.coef_ * x#-----------------B
+print('predicted response:', y_pred_equation, sep='\n')
+print(type(y_pred_equation)) # <class 'numpy.ndarray'>
+# Note: The response array of A& B would be the same.
+
+######## Step 6: Plotting
+import matplotlib.pyplot as plt
+fig = plt.figure(figsize = (10, 5))
+plt.plot(x, y_predict,label='Predicted')
+plt.plot(x, y, 'r-.',label='Actaul') # r-. is for dotted, red color, 'b' for blue & 'g:' for green
+plt.title('Actual vs Predicted')
+plt.xlabel('x-axis for estimators')
+plt.ylabel('y-axis for responses')
+plt.show()
+
+#USE CASE:
+# In practice, regression models are often applied for forecasts.
+# This means that you can use fitted models to calculate the outputs based on some other, new inputs
+
+#----------------------Multiple Linear Regression With scikit-learn ----------------------#
+
+
+
+
+
+
+
+
+
+
+
+#*************************************************************************************************************************
 ## Linear regression on Edureka## 
     # Step 1: Find best fit regression line using Least Square Method
     # Step 2: Check goodness of fit using R squared method
