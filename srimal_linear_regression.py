@@ -266,7 +266,7 @@ print(type(x)) # <class 'numpy.ndarray'>
 # The regression model based on OLS ORDINARY LEAST SQUARES is an instance of the class statsmodels.regression.linear_model.OL
 model = sm.OLS(y, x) # notice that the first argument is the output, followed with the input.
 # Once your model is created, you can apply .fit() on
-results = model.fit()
+results = model.fit() # <statsmodels.regression.linear_model.RegressionResultsWrapper object at 0x190479E8>
 '''By calling .fit(), you obtain the variable results, which is an instance of the class statsmodels.regression.linear_model.RegressionResultsWrapper. 
 This object holds a lot of information about the regression model.'''
 
@@ -279,10 +279,21 @@ print('regression coefficients:', results.params) # refers the array with 𝑏�
 
 #### Step 5: Predict response :  .fittedvalues or .predict
 #obtain the predicted response on the input values used for creating the model using .fittedvalues or .predict() with the input array as the argument
+y_predict=results.predict(x)
 print('predicted response:', results.fittedvalues, sep='\n')
 print('predicted response:', results.predict(x), sep='\n')
 ## Predict unknown when i/p is x_new
 # y_new = results.predict(x_new)
+
+##### Step 6: Plot
+import matplotlib.pyplot as plt
+fig = plt.figure(figsize = (10, 5))
+plt.plot(x, y_predict,'b',label='Predicted')
+plt.plot(x, y, 'r-.',label='Actaul') # r-. is for dotted, red color, 'b' for blue & 'g:' for green
+plt.title('Actual vs Predicted')
+plt.xlabel('x-axis for estimators')
+plt.ylabel('y-axis for responses')
+plt.show()
 
 ###--------------------------------------------------------------------
 '''
@@ -291,18 +302,6 @@ Linear regression is sometimes not appropriate, especially for non-linear models
 Fortunately, there are other regression techniques suitable for the cases where linear regression doesn’t work well. 
 Some of them are support vector machines, decision trees, random forest, and neural networks.
 '''
-
-
-
-
-
-
-
-
-
-
-
-
 
 #*************************************************************************************************************************
 ## Linear regression on Edureka## 
