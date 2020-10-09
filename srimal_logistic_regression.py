@@ -1,5 +1,38 @@
-########  ** MODEL ** ########
-#________________________________________________________________________________
+# Classification is among the most important areas of machine learning, and logistic regression is one of its basic methods.
+# Classification is a very important area of supervised machine learning.
+# Classification is an area of supervised machine learning that tries to predict which class or category some entity belongs to, based on its features.
+"""
+Supervised machine learning algorithms analyze a number of observations and try to mathematically express the dependence between the inputs and outputs.
+These mathematical representations of dependencies are the MODELS.
+
+The nature of the dependent variables differentiates regression and classification problems.
+Regression problems have continuous and usually unbounded outputs. An example is when you’re estimating the salary as a function of experience and education level.
+While, classification problems have discrete and finite outputs called classes or categories.
+For example, predicting if an employee is going to be promoted or not (true or false) is a classification problem.
+
+There are two main types of classification problems:
+    1. Binary or binomial classification: exactly two classes to choose between (usually 0 and 1, true and false, or positive and negative)
+    2. Multiclass or multinomial classification: three or more classes of the outputs to choose from
+"""
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# #*************************************************************************************************************************
 ## Logistic regression on Edureka## 
 # produces result in binary format which is used to predict the outcome of a categorical dependent variabble.
 # so the outcome is discrete such as 0/1, T/F, Yes/No, High/Low etc.
