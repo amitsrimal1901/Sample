@@ -1,3 +1,4 @@
+## https://realpython.com/logistic-regression-python/
 # Classification is among the most important areas of machine learning, and logistic regression is one of its basic methods.
 # Classification is a very important area of supervised machine learning.
 # Classification is an area of supervised machine learning that tries to predict which class or category some entity belongs to, based on its features.
@@ -12,15 +13,182 @@ For example, predicting if an employee is going to be promoted or not (true or f
 
 There are two main types of classification problems:
     1. Binary or binomial classification: exactly two classes to choose between (usually 0 and 1, true and false, or positive and negative)
-    2. Multiclass or multinomial classification: three or more classes of the outputs to choose from
+    2. Multiclass or multinomial classification: three or more classes of the outputs to choose from.
+
+If there’s only one input variable, then it’s usually denoted with 𝑥.
+For more than one input, you’ll commonly see the vector notation 𝐱 = (𝑥₁, …, 𝑥ᵣ), where 𝑟 is the number of the predictors (or independent features).
+The output variable is often denoted with 𝑦 and takes the values 0 or 1.
+
+## WHAT IS LOGISTIC CLASSIFICATION
+Logistic regression is a fundamental classification technique.
+It belongs to the group of linear classifiers and is somewhat similar to polynomial and linear regression.
+We use a linear function 𝑓(𝐱) = 𝑏₀ + 𝑏₁𝑥₁ + ⋯ + 𝑏ᵣ𝑥ᵣ, also called the logit and calculate log to derive logistic function.
+Logistic regression is fast and relatively uncomplicated, and it’s convenient for you to interpret the results.
+Although it’s essentially a method for binary classification, it can also be applied to multiclass problems.
+
+Binary classification has four possible types of results:
+    1. True positives: correctly predicted positives (ones)
+    2. True negatives: correctly predicted negatives (zeros)
+    3. False positives: incorrectly predicted positives (ones)
+    4. False negatives: incorrectly predicted negatives (zeros)
+
+The most straightforward indicator of classification ACCURACY is the ratio of the number of correct predictions to the total number of predictions (or observations).
+Other indicators of binary classifiers include the following:
+    1. The positive predictive value is the ratio of the number of true positives to the sum of the numbers of true and false positives.
+    2. The negative predictive value is the ratio of the number of true negatives to the sum of the numbers of true and false negatives.
+    3. The SENSITIVITY (also known as RECALL or true positive rate) is the ratio of the number of true positives to the number of actual positives.
+    4. The SPECIFICITY (or true negative rate) is the ratio of the number of true negatives to the number of actual negatives.
+NOTE: The most suitable indicator depends on the problem of interest.
+
+SINGLE VARIATE logistic regression is the most straightforward case of logistic regression.
+There is only one independent variable (or feature), which is 𝐱 = 𝑥.
+
+MULTI VARIATE logistic regression has more than one input variable.
+
+REGUALRIZATION:
+Overfitting is one of the most serious kinds of problems related to machine learning.
+The model then learns not only the relationships among data but also the noise in the dataset.
+Overfitting usually occurs with complex models. Regularization normally tries to reduce or penalize the complexity of the model.
+
+Regularization techniques applied with logistic regression mostly tend to penalize large coefficients 𝑏₀, 𝑏₁, …, 𝑏ᵣ:
+    1. L1 regularization penalizes the LLF with the scaled sum of the absolute values of the weights: |𝑏₀|+|𝑏₁|+⋯+|𝑏ᵣ|.
+    2. L2 regularization penalizes the LLF with the scaled sum of the squares of the weights: 𝑏₀²+𝑏₁²+⋯+𝑏ᵣ².
+    3. Elastic-net regularization is a linear combination of L1 and L2 regularization.
+Regularization can significantly improve model performance on unseen data.
 """
 
+#---------------------Logistic Regression in Python With scikit-learn: Example 1 ----------------------#
+## Step 1: Import Packages, Functions, and Classes
+import matplotlib.pyplot as plt
+import numpy as np
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import classification_report, confusion_matrix
 
+## Step 2: Get Data
+# The input and output should be NumPy arrays
+x = np.arange(10).reshape(-1, 1)
+print(type(x))  #<class 'numpy.ndarray'>
+# The array x is required to be two-dimensional. It should have one column for each input, and the number of rows should be equal to the number of observations.
+# To make x two-dimensional, you apply .reshape() with the arguments -1 to get as many rows as needed and 1 to get one column.
+# x has two dimensions:
+    # One column for a single input
+    # Ten rows, each corresponding to one observation
+y = np.array([0, 0, 0, 0, 1, 1, 1, 1, 1, 1]) #y is one-dimensional with ten items
 
+## Step 3: Create a Model and Train It
+model = LogisticRegression(solver='liblinear', random_state=0)
+# solver is a string ('liblinear' by default) that decides what solver to use for fitting the model. Other options are 'newton-cg', 'lbfgs', 'sag', and 'saga'.
+# random_state is an integer, an instance of numpy.RandomState, or None (default) that defines what pseudo-random number generator to use.
 
+# Once the model is created, you need to fit (or train) it.
+# Model fitting is the process of determining the coefficients 𝑏₀, 𝑏₁, …, 𝑏ᵣ that correspond to the best value of the cost function.
+model.fit(x, y)
 
+## Alternatively, we can combine all above steps as --> model = LogisticRegression(solver='liblinear', random_state=0).fit(x, y)
 
+## At this point, we have the classification model defined we can quickly get the attributes of our model
+model.classes_ # array([0, 1]) # This is the example of binary classification, and y can be 0 or
+# get slope b1  and intercept 𝑏₀ of linear finction
+model.intercept_ # array([-1.04608067])
+model.coef_ #array([[0.51491375]])
+## NOTE: 𝑏₀ is given inside a one-dimensional array, while 𝑏₁ is inside a two-dimensional array.
 
+## Step 4: Evaluate the Model
+# Once a model is defined, you can check its performance with .predict_proba(), which returns the matrix of probabilities that the predicted output is equal to zero or one.
+model.predict_proba(x)
+    # in the o/p each row corresponds to a single observation.
+    # The first column is the probability of the predicted output being zero, that is 1 - 𝑝(𝑥).
+    # The second column is the probability that the output is one, or 𝑝(𝑥).
+
+# get the actual predictions, based on the probability matrix and the values of 𝑝(𝑥)
+model.predict(x) # This function returns the predicted output values as a one-dimensional array.
+
+#  the accuracy of your model
+model.score(x, y) # .score() takes the input and output as arguments and returns the ratio of the number of correct predictions to the number of observations.
+
+# get more information on the accuracy of the model with a confusion matrix
+confusion_matrix(y, model.predict(x))
+"""
+True negatives in the upper-left position
+False negatives in the lower-left position
+False positives in the upper-right position
+True positives in the lower-right position
+"""
+
+## Step 5:  to visualize the confusion matrix.
+# We will do that with .imshow() from Matplotlib
+cm = confusion_matrix(y, model.predict(x))
+
+fig, ax = plt.subplots(figsize=(8, 8))
+ax.imshow(cm)
+ax.grid(False)
+ax.xaxis.set(ticks=(0, 1), ticklabels=('Predicted 0s', 'Predicted 1s'))
+ax.yaxis.set(ticks=(0, 1), ticklabels=('Actual 0s', 'Actual 1s'))
+ax.set_ylim(1.5, -0.5)
+for i in range(2):
+    for j in range(2):
+        ax.text(j, i, cm[i, j], ha='center', va='center', color='red')
+plt.show()
+## creates a heatmap that represents the confusion matrix
+
+# more comprehensive report on the classification with classification_report()
+# function also takes the actual and predicted outputs as arguments.
+# It returns a report on the classification as a dictionary if you provide output_dict=True or a string otherwise.
+print(classification_report(y, model.predict(x)))
+
+## STEP 6: Improve the Model
+# We can improve your model by setting different parameters.
+# For example, let’s work with the regularization strength C equal to 10.0, instead of the default value of 1.0:
+model = LogisticRegression(solver='liblinear', C=10.0, random_state=0)
+model.fit(x, y)
+## Now we have another model with different parameters. It’s also going to have a different probability matrix and a different set of coefficients and predictions
+model.intercept_
+model.coef_
+model.predict_proba(x)
+model.predict(x)
+model.score(x, y)
+confusion_matrix(y, model.predict(x))
+print(classification_report(y, model.predict(x)))
+# The score (or accuracy) of 1 and the zeros in the lower-left and upper-right fields of the confusion matrix indicate that the actual and predicted outputs are the same.
+
+#---------------------Logistic Regression in Python With scikit-learn: Example 2 ----------------------#
+# another classification problem. It’s similar to the previous one, except that the output differs in the second value
+# Step 1: Import packages, functions, and classes
+import numpy as np
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import classification_report, confusion_matrix
+
+# Step 2: Get data
+x = np.arange(10).reshape(-1, 1)
+y = np.array([0, 1, 0, 0, 1, 1, 1, 1, 1, 1])
+
+# Step 3: Create a model and train it
+model = LogisticRegression(solver='liblinear', C=10.0, random_state=0)
+model.fit(x, y)
+
+# Step 4: Evaluate the model
+p_pred = model.predict_proba(x)
+y_pred = model.predict(x)
+score_ = model.score(x, y)
+conf_m = confusion_matrix(y, y_pred)
+report = classification_report(y, y_pred)
+
+print('x:', x, sep='\n')
+print('y:', y, sep='\n', end='\n\n')
+print('intercept:', model.intercept_)
+print('coef:', model.coef_, end='\n\n')
+print('p_pred:', p_pred, sep='\n', end='\n\n')
+print('score_:', score_, end='\n\n')
+print('conf_m:', conf_m, sep='\n', end='\n\n')
+print('report:', report, sep='\n')
+# In this case, the score (or accuracy) is 0.8.
+#There are two observations classified incorrectly. One of them is a false negative, while the other is a false positive.
+"""
+one important characteristic of this example is not linearly separable.
+That means you can’t find a value of 𝑥 and draw a straight line to separate the observations with 𝑦=0 and those with 𝑦=1. 
+There is no such line.
+Keep in mind that logistic regression is essentially a linear classifier, so you theoretically can’t make a logistic regression model with an accuracy of 1 in this case.
+"""
 
 
 
