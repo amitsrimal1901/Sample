@@ -84,7 +84,7 @@ from sklearn.linear_model import LinearRegression
 ##########  step2: Data to work on
 x = np.array([5, 15, 25, 35, 45, 55]).reshape((-1, 1)) # <class 'numpy.ndarray'> FEATURE
 # we called .reshape() on x because this array is required to be two-dimensional, or to be more precise, to have one column and as many rows as necessary.
-# That’s exactly what the argument (-1, 1) of .reshape() specifies.
+# That’s exactly what the argument (-1, 1) of .reshape() specifies. -1 means as MANY AS while 1 means numbers of columns, we can set it 2,3 4 based on requirement
 print(x)
 '''[[ 5]
     [15]
@@ -92,9 +92,15 @@ print(x)
     [35]
     [45]
     [55]]'''
+
 y = np.array([5, 20, 14, 32, 22, 38]) # <class 'numpy.ndarray'> TARGET
 print(y) # [ 5 20 14 32 22 38]
 print(y.shape) # (6,)
+
+#showing disctribution
+import matplotlib.pyplot as plt
+plt.scatter(x,y,color='red')
+plt.show()
 ##########  step3: create model
 model = LinearRegression()
 # this create an instance of the class LinearRegression, which will represent the regression model.
@@ -152,6 +158,7 @@ x = [[0, 1], [5, 1], [15, 2], [25, 5], [35, 11], [45, 15], [55, 34], [60, 35]] #
 y = [4, 5, 20, 14, 32, 22, 38, 43] # LIST of resposne
 print(type(x)) #<class 'list'>
 print(type(y)) #<class 'list'>
+
 #Creating aaray for model operations
 x, y = np.array(x), np.array(y)
 
@@ -308,7 +315,7 @@ Some of them are support vector machines, decision trees, random forest, and neu
 import quandl, math
 import numpy as np
 import pandas as pd
-from sklearn import preprocessing, cross_validation, svm
+from sklearn import preprocessing, model_selection, svm   # cross_validation is replaced by model_selection
 from sklearn.linear_model import LinearRegression
 import matplotlib.pyplot as plt
 from matplotlib import style
@@ -334,7 +341,8 @@ print(type(forecast_col))  # <class 'str'>
 df.fillna(value=-99999, inplace=True)
 forecast_out = int(math.ceil(0.01 * len(df)))  #sets the time in future for whch we want to predict say 1% here in this case
 print(forecast_out) # 35 is days count we wanyt to predict in future
-
+print(df.shape) # (3424, 4) ie ['Adj. Close', 'HL_PCT', 'PCT_change', 'Adj. Volume']
+df.head()
 ## features are a bunch of the current values, and the label shall be the price, in the future, where the future is 1% of the entire length of the dataset out.
 # We'll assume all current columns are our features, so we'll add a new column with a simple pandas operation:
 
@@ -342,7 +350,7 @@ print(forecast_out) # 35 is days count we wanyt to predict in future
 df['label'] = df[forecast_col].shift(-forecast_out) # push the data label by 1% as we need to predict for 1% of data points
 print(df['label']) # 3424 length
 print(df.head(10))
-print(df.tail(10)) # tails consist of Nan for new column
+print(df.tail(50)) # tails consist of Nan for new column
 # NOTE: we have the data that comprises our features and labels
 
 X = np.array(df.drop(['label'], 1))
@@ -353,16 +361,26 @@ X = X[:-forecast_out]
 df.dropna(inplace=True)
 y = np.array(df['label'])
 
-X_train, X_test, y_train, y_test = cross_validation.train_test_split(X, y, test_size=0.2)
+X_train, X_test, y_train, y_test = model_selection.train_test_split(X, y, test_size=0.2)
+X_train.shape # 2711 by 4
+
+#Ow comes the model preparation part
+clf = LinearRegression(n_jobs=-1)
+clf.fit(X_train, y_train)
+confidence = clf.score(X_test, y_test)
+print(confidence) # 97%
 #COMMENTED OUT:
 ##clf = svm.SVR(kernel='linear')
 ##clf.fit(X_train, y_train)
 ##confidence = clf.score(X_test, y_test)
 ##print(confidence)
+# loading the trainingmodel in pickle module for future reuse
 pickle_in = open('linearregression.pickle','rb')
 clf = pickle.load(pickle_in)
 
-forecast_set = clf.predict(X_lately)
+# now the forecast part
+forecast_set = clf.predict(X_lately) #using the Nan data for testng of prediction acciracy
+print(forecast_set) # 35 values of prediction
 df['Forecast'] = np.nan
 
 last_date = df.iloc[-1].name
@@ -380,6 +398,60 @@ plt.legend(loc=4)
 plt.xlabel('Date')
 plt.ylabel('Price')
 plt.show()
+
+#************************************************************************************************************************
+# Importing the libraries
+import numpy as np
+import matplotlib.pyplot as plt
+import pandas as pd
+from sklearn.metrics import f1_score, precision_score, recall_score, confusion_matrix, mean_squared_error, mean_absolute_error, explained_variance_score
+
+# Importing the dataset
+dataset = pd.read_csv('Salary_Data.csv') #https://github.com/srafay/Machine_Learning_A-Z/blob/master/Part%202%20-%20Regression/Section%204%20-%20Simple%20Linear%20Regression/Salary_Data.csv
+X = dataset.iloc[:, :-1].values
+y = dataset.iloc[:, 1].values
+
+# Splitting the dataset into the Training set and Test set
+from sklearn.model_selection import train_test_split
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 1/3, random_state = 0)
+
+# Feature Scaling
+"""from sklearn.preprocessing import StandardScaler
+sc_X = StandardScaler()
+X_train = sc_X.fit_transform(X_train)
+X_test = sc_X.transform(X_test)
+sc_y = StandardScaler()
+y_train = sc_y.fit_transform(y_train)"""
+
+# Fitting Simple Linear Regression to the Training set
+from sklearn.linear_model import LinearRegression
+model = LinearRegression()
+model.fit(X_train, y_train)
+
+# Predicting the Test set results
+y_pred = model.predict(X_test)
+
+# Visualising the Training set results
+plt.scatter(X_train, y_train, color = 'red')
+plt.plot(X_train, model.predict(X_train), color = 'blue')
+plt.title('Salary vs Experience (Training set)')
+plt.xlabel('Years of Experience')
+plt.ylabel('Salary')
+plt.show()
+
+plt.plot(y_pred, y_test)
+
+# Visualising the Test set results
+plt.scatter(X_test, y_test, color = 'red')
+plt.plot(X_train, model.predict(X_train), color = 'blue')
+plt.title('Salary vs Experience (Test set)')
+plt.xlabel('Years of Experience')
+plt.ylabel('Salary')
+plt.show()
+
+mse = mean_squared_error(y_test, y_pred)
+mae = mean_absolute_error(y_test, y_pred)
+evs = explained_variance_score(y_test, y_pred)
 
 
 #*************************************************************************************************************************
@@ -505,7 +577,7 @@ len(Y_pred)
 #_______________________________________________________________________________
 #### Linear regression using Boston dataset of sklearn
 from sklearn import linear_model
-from sklearn.cross_validation import train_test_split
+from sklearn.model_selection import train_test_split
 from sklearn.datasets import load_boston
 boston=load_boston()
 boston
