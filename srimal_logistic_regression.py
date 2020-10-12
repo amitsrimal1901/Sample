@@ -196,10 +196,6 @@ Keep in mind that logistic regression is essentially a linear classifier, so you
 
 
 
-
-
-
-
 # #*************************************************************************************************************************
 ## Logistic regression on Edureka## 
 # produces result in binary format which is used to predict the outcome of a categorical dependent variabble.

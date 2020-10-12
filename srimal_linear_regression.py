@@ -302,6 +302,85 @@ Linear regression is sometimes not appropriate, especially for non-linear models
 Fortunately, there are other regression techniques suitable for the cases where linear regression doesn’t work well. 
 Some of them are support vector machines, decision trees, random forest, and neural networks.
 '''
+##***********************************************************************************************************************
+# Sentdex python programming: https://pythonprogramming.net/pickling-scaling-machine-learning-tutorial/
+
+import quandl, math
+import numpy as np
+import pandas as pd
+from sklearn import preprocessing, cross_validation, svm
+from sklearn.linear_model import LinearRegression
+import matplotlib.pyplot as plt
+from matplotlib import style
+import datetime
+import pickle
+style.use('ggplot')
+
+df = quandl.get("WIKI/GOOGL")
+print(df.shape) # (3424, 12)
+# pd.set_option('display.max_columns', None)--> use if we want o  view all columns of df
+print(df.head())
+df = df[['Adj. Open',  'Adj. High',  'Adj. Low',  'Adj. Close', 'Adj. Volume']] # slecting columns for investigation frm 12 column name
+print(df.head())
+df['HL_PCT'] = (df['Adj. High'] - df['Adj. Low']) / df['Adj. Close'] * 100.0
+df['PCT_change'] = (df['Adj. Close'] - df['Adj. Open']) / df['Adj. Open'] * 100.0
+# updating df with columns that we need to investgation
+df = df[['Adj. Close', 'HL_PCT', 'PCT_change', 'Adj. Volume']]
+print(df.head())
+
+forecast_col = 'Adj. Close' # as the price of stock will be the adj closing price for a day hence use this as LABEL
+print(type(forecast_col))  # <class 'str'>
+# we fill nan for column cells with no data, which are reserved for future values
+df.fillna(value=-99999, inplace=True)
+forecast_out = int(math.ceil(0.01 * len(df)))  #sets the time in future for whch we want to predict say 1% here in this case
+print(forecast_out) # 35 is days count we wanyt to predict in future
+
+## features are a bunch of the current values, and the label shall be the price, in the future, where the future is 1% of the entire length of the dataset out.
+# We'll assume all current columns are our features, so we'll add a new column with a simple pandas operation:
+
+# so lets create a new column "label" for holding the forescast_col (Adj.Close) price of stock.
+df['label'] = df[forecast_col].shift(-forecast_out) # push the data label by 1% as we need to predict for 1% of data points
+print(df['label']) # 3424 length
+print(df.head(10))
+print(df.tail(10)) # tails consist of Nan for new column
+# NOTE: we have the data that comprises our features and labels
+
+X = np.array(df.drop(['label'], 1))
+X = preprocessing.scale(X)
+print(type(X)) # <class 'numpy.ndarray'>
+X_lately = X[-forecast_out:]
+X = X[:-forecast_out]
+df.dropna(inplace=True)
+y = np.array(df['label'])
+
+X_train, X_test, y_train, y_test = cross_validation.train_test_split(X, y, test_size=0.2)
+#COMMENTED OUT:
+##clf = svm.SVR(kernel='linear')
+##clf.fit(X_train, y_train)
+##confidence = clf.score(X_test, y_test)
+##print(confidence)
+pickle_in = open('linearregression.pickle','rb')
+clf = pickle.load(pickle_in)
+
+forecast_set = clf.predict(X_lately)
+df['Forecast'] = np.nan
+
+last_date = df.iloc[-1].name
+last_unix = last_date.timestamp()
+one_day = 86400
+next_unix = last_unix + one_day
+
+for i in forecast_set:
+    next_date = datetime.datetime.fromtimestamp(next_unix)
+    next_unix += 86400
+    df.loc[next_date] = [np.nan for _ in range(len(df.columns)-1)]+[i]
+df['Adj. Close'].plot()
+df['Forecast'].plot()
+plt.legend(loc=4)
+plt.xlabel('Date')
+plt.ylabel('Price')
+plt.show()
+
 
 #*************************************************************************************************************************
 ## Linear regression on Edureka## 
