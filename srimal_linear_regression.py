@@ -400,6 +400,8 @@ plt.ylabel('Price')
 plt.show()
 
 #************************************************************************************************************************
+# FROM GITHUB SIMPLE LINEAR LinearRegression
+# https://github.com/srafay/Machine_Learning_A-Z/blob/master/Part%202%20-%20Regression/Section%204%20-%20Simple%20Linear%20Regression/simple_linear_regression.py
 # Importing the libraries
 import numpy as np
 import matplotlib.pyplot as plt
@@ -432,8 +434,8 @@ model.fit(X_train, y_train)
 y_pred = model.predict(X_test)
 
 # Visualising the Training set results
-plt.scatter(X_train, y_train, color = 'red')
-plt.plot(X_train, model.predict(X_train), color = 'blue')
+plt.scatter(X_train, y_train, color = 'red') # plots the individual x,y pair
+plt.plot(X_train, model.predict(X_train), color = 'blue') # plots the regression line
 plt.title('Salary vs Experience (Training set)')
 plt.xlabel('Years of Experience')
 plt.ylabel('Salary')
@@ -865,19 +867,169 @@ plt.show()
 # WHILE polynomials uses a high degree polynomial to produce flexible fits
 # trying to get xtra flexibility in the polynomial produces undesirable results at the boundaries,whereas the natural cubic spline still provides a reasonable fit to the data.
 
+#*********************************************************************************************************************************
+## Multiple Linear Regression with SCALING-TRANSFORMATION, ENCODING LOGIC
+#https://github.com/srafay/Machine_Learning_A-Z/blob/master/Part%202%20-%20Regression/Section%205%20-%20Multiple%20Linear%20Regression/multiple_linear_regression.py
+
+# Importing the libraries
+import numpy as np
+import matplotlib.pyplot as plt
+import pandas as pd
+from sklearn.metrics import mean_squared_error
+
+# Importing the dataset
+# https://github.com/srafay/Machine_Learning_A-Z/blob/master/Part%202%20-%20Regression/Section%205%20-%20Multiple%20Linear%20Regression/50_Startups.csv
+dataset = pd.read_csv('C:/Users/amit_srimal/Documents/Study/Python/Files/50_Startups.csv')
+type(dataset) # <class 'pandas.core.frame.DataFrame'>
+
+# Extracting features, labels as arrays
+X = dataset.iloc[:, :-1].values # X.shape is (50,4)
+y = dataset.iloc[:, 4].values # y.shape is (50,) PROFIT VALUES
+type(X) # <class 'numpy.ndarray'>
+
+# Encoding categorical data
+""" This way of Encoding is deprecated now
+from sklearn.preprocessing import LabelEncoder, OneHotEncoder
+labelencoder = LabelEncoder() # <class 'sklearn.preprocessing._label.LabelEncoder'>
+X[:, 3] = labelencoder.fit_transform(X[:, 3]) # encoding all values of column 3 called CITY in X
+# Above operation assigns integer value code to CITY
+
+onehotencoder = OneHotEncoder(categorical_features = [3])
+X = onehotencoder.fit_transform(X).toarray()"""
+# Lets encode with new approach
+from sklearn.preprocessing import OneHotEncoder
+from sklearn.compose import ColumnTransformer
+
+ct = ColumnTransformer(
+    [('one_hot_encoder', OneHotEncoder(), [3])],    # The column numbers to be transformed (here is [0] but can be [0, 1, 3])
+    remainder='passthrough'                         # Leave the rest of the columns untouched
+)
+
+X = np.array(ct.fit_transform(X), dtype=np.float)
+type(X) #<class 'numpy.ndarray'>
+X.shape # (50,6)
+
+# Avoiding the Dummy Variable Trap by dropping any of the column say 0th column in our case
+X = X[:, 1:] #<class 'numpy.ndarray'> having shape (50,5 )
+
+# Splitting the dataset into the Training set and Test set
+from sklearn.model_selection import train_test_split
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.2, random_state = 0)
+
+# Feature Scaling
+"""from sklearn.preprocessing import StandardScaler
+sc_X = StandardScaler()
+X_train = sc_X.fit_transform(X_train)
+X_test = sc_X.transform(X_test)
+sc_y = StandardScaler()
+y_train = sc_y.fit_transform(y_train)"""
+
+# Fitting Multiple Linear Regression to the Training set
+from sklearn.linear_model import LinearRegression
+regressor = LinearRegression()
+regressor.fit(X_train, y_train)
+
+# Predicting the Test set results
+y_pred = regressor.predict(X_test)
+
+##### Building the OPTIMAL model using Backward Elimination
+"""
+Backward elimination (or backward deletion) is the reverse process. 
+All the independent variables are entered into the equation first and each one is deleted one at a time if they do not contribute to the regression equation. 
+Stepwise selection is considered a variation of the previous two methods.
+"""
+import statsmodels.api as sm
+X = np.append(arr = np.ones((50, 1)).astype(int), values = X, axis = 1)
+X_opt = X[:, [0, 1, 2, 3, 4, 5]]
+regressor_OLS = sm.OLS(endog = y, exog = X_opt).fit()
+regressor_OLS.summary() # remove the column with highest p value (provided its greater than SL of 5% which we set as standard)
+X_opt = X[:, [0, 1, 3, 4, 5]]
+regressor_OLS = sm.OLS(endog = y, exog = X_opt).fit()
+regressor_OLS.summary()
+X_opt = X[:, [0, 3, 4, 5]]
+regressor_OLS = sm.OLS(endog = y, exog = X_opt).fit()
+regressor_OLS.summary()
+X_opt = X[:, [0, 3, 5]]
+regressor_OLS = sm.OLS(endog = y, exog = X_opt).fit()
+regressor_OLS.summary()
+X_opt = X[:, [0, 3]]
+regressor_OLS = sm.OLS(endog = y, exog = X_opt).fit()
+regressor_OLS.summary()
+
+mse1 = mean_squared_error(y_test, y_pred)
+
+X_train, X_test, y_train, y_test = train_test_split(X_opt, y, test_size = 0.2, random_state = 0)
+regressor = LinearRegression()
+regressor.fit(X_train, y_train)
+y_pred = regressor.predict(X_test)
+mse2 = mean_squared_error(y_test, y_pred)
+
+#*****************************************************************************************************************************
+# POLYNOMAIAL LinearRegression
+# https://github.com/srafay/Machine_Learning_A-Z/blob/master/Part%202%20-%20Regression/Section%206%20-%20Polynomial%20Regression/polynomial_regression.py
+# Importing the libraries
+import numpy as np
+import matplotlib.pyplot as plt
+import pandas as pd
+# Importing the dataset
+dataset = pd.read_csv('C:/Users/amit_srimal/Documents/Study/Python/Files/Position_Salaries.csv')
+X = dataset.iloc[:, 1:2].values
+y = dataset.iloc[:, 2].values
+# Splitting the dataset into the Training set and Test set
+"""from sklearn.model_selection import train_test_split
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.2, random_state = 0)
+
+# Feature Scaling
+from sklearn.preprocessing import StandardScaler
+sc_X = StandardScaler()
+X_train = sc_X.fit_transform(X_train)
+X_test = sc_X.transform(X_test)"""
+
+# Fitting Linear Regression to the dataset
+from sklearn.linear_model import LinearRegression
+lin_reg = LinearRegression()
+lin_reg.fit(X, y)
+
+# Fitting Polynomial Regression to the dataset
+from sklearn.preprocessing import PolynomialFeatures
+poly_reg = PolynomialFeatures(degree = 4)
+X_poly = poly_reg.fit_transform(X)
+poly_reg.fit(X_poly, y)
+lin_reg_2 = LinearRegression()
+lin_reg_2.fit(X_poly, y)
 
 
+# Visualising the Linear Regression results
+plt.scatter(X, y, color = 'red')
+plt.plot(X, lin_reg.predict(X), color = 'blue')
+plt.title('Truth or Bluff (Linear Regression)')
+plt.xlabel('Position level')
+plt.ylabel('Salary')
+plt.show()
 
+# Visualising the Polynomial Regression results
+plt.scatter(X, y, color = 'red')
+plt.plot(X, lin_reg_2.predict(poly_reg.fit_transform(X)), color = 'blue')
+plt.title('Truth or Bluff (Polynomial Regression)')
+plt.xlabel('Position level')
+plt.ylabel('Salary')
+plt.show()
 
+# Visualising the Polynomial Regression results (for higher resolution and smoother curve)
+X_grid = np.arange(min(X), max(X), 0.1)
+X_grid = X_grid.reshape((len(X_grid), 1))
+plt.scatter(X, y, color = 'red')
+plt.plot(X_grid, lin_reg_2.predict(poly_reg.fit_transform(X_grid)), color = 'blue')
+plt.title('Truth or Bluff (Polynomial Regression)')
+plt.xlabel('Position level')
+plt.ylabel('Salary')
+plt.show()
 
+# Predicting a new result with Linear Regression
+lin_reg.predict(6.5)
 
-
-
-
-
-
-
-
+# Predicting a new result with Polynomial Regression
+lin_reg_2.predict(poly_reg.fit_transform(6.5))
 
 
 
