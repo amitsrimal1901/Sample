@@ -233,6 +233,7 @@ print('predicted response:', y_predict, sep='\n')
 ##### Step 6: Plot
 import matplotlib.pyplot as plt
 fig = plt.figure(figsize = (10, 5))
+plt.scatter(x,y,color='blue')
 plt.plot(x_, y_predict,'b',label='Predicted')
 plt.plot(x_, y, 'r-.',label='Actaul') # r-. is for dotted, red color, 'b' for blue & 'g:' for green
 plt.title('Actual vs Predicted')
@@ -974,6 +975,8 @@ import pandas as pd
 # Importing the dataset
 dataset = pd.read_csv('C:/Users/amit_srimal/Documents/Study/Python/Files/Position_Salaries.csv')
 X = dataset.iloc[:, 1:2].values  # selecting just the level column here for polynomail fit.
+"""<class 'numpy.ndarray'> is the retrun type of dataset.iloc[:, 1:2].values
+<class 'pandas.core.frame.DataFrame'> is the return type of dataset.iloc[:, 1:2]"""
 y = dataset.iloc[:, 2].values
 # Splitting the dataset into the Training set and Test set
 """from sklearn.model_selection import train_test_split
@@ -989,48 +992,48 @@ X_test = sc_X.transform(X_test)"""
 from sklearn.linear_model import LinearRegression
 lin_reg = LinearRegression()
 lin_reg.fit(X, y)
-
-# Fitting Polynomial Regression to the dataset
-from sklearn.preprocessing import PolynomialFeatures
-poly_reg = PolynomialFeatures(degree = 4)
-X_poly = poly_reg.fit_transform(X)
-poly_reg.fit(X_poly, y)
-lin_reg_2 = LinearRegression()
-lin_reg_2.fit(X_poly, y)
-
 # Visualising the Linear Regression results
 plt.scatter(X, y, color = 'red')
 plt.plot(X, lin_reg.predict(X), color = 'blue')
-plt.title('Truth or Bluff (Linear Regression)')
+plt.title('Linear Regression')
 plt.xlabel('Position level')
 plt.ylabel('Salary')
 plt.show()
 
+# Fitting Polynomial Regression to the dataset
+# In Polynomail, we need to include 𝑥² & higher orders.
+# # SO we need to transform the input array x to contain the additional column(s) with the values of 𝑥² (and eventually more features).
+# # It’s possible to transform the input array in several ways (like using insert() from numpy), but the class PolynomialFeatures is very convenient for this purpose.
+from sklearn.preprocessing import PolynomialFeatures
+poly_reg = PolynomialFeatures(degree = 4)
+X_poly = poly_reg.fit_transform(X) # <class 'numpy.ndarray'>
+"""poly_reg.fit(X_poly, y)""" # <class 'sklearn.preprocessing._data.PolynomialFeatures'>
+# Since this is indirectly a type of linear regression, we use LinearRegression() with polynomail data for model fitting
+lin_reg_2 = LinearRegression()
+lin_reg_2.fit(X_poly, y)
 # Visualising the Polynomial Regression results
 plt.scatter(X, y, color = 'red')
-plt.plot(X, lin_reg_2.predict(poly_reg.fit_transform(X)), color = 'blue')
-plt.title('Truth or Bluff (Polynomial Regression)')
-plt.xlabel('Position level')
-plt.ylabel('Salary')
-plt.show()
-
-# Visualising the Polynomial Regression results (for higher resolution and smoother curve)
-X_grid = np.arange(min(X), max(X), 0.1)
-X_grid = X_grid.reshape((len(X_grid), 1))
-plt.scatter(X, y, color = 'red')
-plt.plot(X_grid, lin_reg_2.predict(poly_reg.fit_transform(X_grid)), color = 'blue')
-plt.title('Truth or Bluff (Polynomial Regression)')
+plt.plot(X, lin_reg_2.predict(X_poly), color = 'blue')
+plt.title('Polynomial Regression')
 plt.xlabel('Position level')
 plt.ylabel('Salary')
 plt.show()
 
 # Predicting a new result with Linear Regression
-lin_reg.predict(6.5)
-
+lin_reg.predict(6.5) # ValueError: Expected 2D array, got scalar array instead
+lin_reg.predict([[6.5]]) # array([330378.78787879])
+lin_reg.predict([[6.5],[7.5]]) # for querying multiple values
+"""
+The reason we need a 2d array is because we can do linear regression in a higher dimension space than just 2d. 
+For example, we could do linear regression in a 3d space. 
+Suppose we want to predict "z" for a given data point (x, y). Then we'd need to say regression.predict([[x, y]])."""
 # Predicting a new result with Polynomial Regression
-lin_reg_2.predict(poly_reg.fit_transform(6.5))
+lin_reg_2.predict(poly_reg.fit_transform([[6.5]])) # array([174192.8193072])
 
+## Conclusion:
+# So the salary is much closer to the one that's represented by POLYNOMIAL and quite evident from the CSV file trend as well
 
+#***************************************************************************************************************************
 
 
 
