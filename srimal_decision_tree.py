@@ -506,7 +506,7 @@ if __name__=="__main__":
 
 #*********************************************************************************************************************
 # Decison Tree Regression
-#
+#https://github.com/amitsrimal1901/Machine_Learning_A-Z/blob/master/Part%202%20-%20Regression/Section%208%20-%20Decision%20Tree%20Regression/regression_template.py
 
 # Importing the libraries
 import numpy as np
@@ -514,9 +514,9 @@ import matplotlib.pyplot as plt
 import pandas as pd
 
 # Importing the dataset
-dataset = pd.read_csv('Position_Salaries.csv')
-X = dataset.iloc[:, 1:2].values
-y = dataset.iloc[:, 2].values
+dataset = pd.read_csv('C:/Users/amit_srimal/Documents/Study/Python/Files/Position_Salaries.csv')
+X = dataset.iloc[:, 1:2].values  # numpy array
+y = dataset.iloc[:, 2].values #  # numpy array
 
 # Splitting the dataset into the Training set and Test set
 """from sklearn.cross_validation import train_test_split
@@ -530,36 +530,103 @@ X_test = sc_X.transform(X_test)
 sc_y = StandardScaler()
 y_train = sc_y.fit_transform(y_train)"""
 
-# Fitting the Regression Model to the dataset
-# Create your regressor here
+# Fitting Decision Tree Regression to the dataset
+from sklearn.tree import DecisionTreeRegressor
+regressor = DecisionTreeRegressor() #<class 'sklearn.tree._classes.DecisionTreeRegressor'>
+regressor.fit(X, y) # DecisionTreeRegressor()
 
+#plotting
+from sklearn import tree
+fig = plt.figure(figsize=(20,10))
+_ = tree.plot_tree(regressor, feature_names=np.asarray(dataset.iloc[:, 1:2].columns), filled=True)
+"""
+In above plot, we need to have feature_namea
+So we got columns name first using .iloc
+Then we converted the index from abpve step to array
+"""
 # Predicting a new result
-y_pred = regressor.predict(6.5)
+y_pred = regressor.predict([[6.5]]) # array([150000.])
 
-# Visualising the Regression results
-plt.scatter(X, y, color = 'red')
-plt.plot(X, regressor.predict(X), color = 'blue')
-plt.title('Truth or Bluff (Regression Model)')
-plt.xlabel('Position level')
-plt.ylabel('Salary')
-plt.show()
+# Getting accuracy
+#from sklearn import metrics
+#print("Accuracy:",metrics.accuracy_score(y_test, y_pred))
 
-# Visualising the Regression results (for higher resolution and smoother curve)
-X_grid = np.arange(min(X), max(X), 0.1)
+# Visualising the Decision Tree Regression results (higher resolution)
+X_grid = np.arange(min(X), max(X), 0.01)
 X_grid = X_grid.reshape((len(X_grid), 1))
 plt.scatter(X, y, color = 'red')
 plt.plot(X_grid, regressor.predict(X_grid), color = 'blue')
-plt.title('Truth or Bluff (Regression Model)')
+plt.title('Truth or Bluff (Decision Tree Regression)')
 plt.xlabel('Position level')
 plt.ylabel('Salary')
 plt.show()
 
+#**************************************************************************************************************************
+"""
+decision trees can be divided, with respect to the target values, into:
+1. Classification trees used to classify samples, assign to a limited set of values - classes. In scikit-learn it is DecisionTreeClassifier.
+2. Regression trees used to assign samples into numerical values within the range. In scikit-learn it is DecisionTreeRegressor.
+
+4 ways to visualize Decision Tree in Python:
+    1. print text representation of the tree with sklearn.tree.export_text method
+    2. plot with sklearn.tree.plot_tree method (matplotlib needed)
+    3. plot with sklearn.tree.export_graphviz method (graphviz needed)
+    4. plot with dtreeviz package (dtreeviz and graphviz needed)"""
+
+##  Decision Tree on CLASSIFICATION Task-------------------------
+# DATA SET to be used for DECISION TREE
+from matplotlib import pyplot as plt
+from sklearn import datasets
+from sklearn.tree import DecisionTreeClassifier
+from sklearn import tree
+# Prepare the data data
+iris = datasets.load_iris()
+X = iris.data # array
+y = iris.target # array
+# Fit the classifier with default hyper-parameters
+clf = DecisionTreeClassifier(random_state=1234)
+model = clf.fit(X, y)
+# METHOD 1:
+# Exporting Decision Tree to the text representation
+text_representation = tree.export_text(clf)
+print(text_representation)
+
+# METHOD 2:
+# Print Text Representation
+fig = plt.figure(figsize=(25,20))
+_ = tree.plot_tree(clf,
+                   feature_names=iris.feature_names,
+                   class_names=iris.target_names,
+                   filled=True)
+
+# METHOD 3:
+# Using graphviz
+#METHOD 4:
+#Decision Tree with dtreeviz Package
+#The dtreeviz package is available in github. It can be installed with pip install dtreeviz.
+# It requires graphviz to be installed (but you dont need to manually convert between DOT files and images). To plot the tree just run:
+
+##  Decision Tree on REGRESSION  Task-------------------------
+from sklearn import datasets
+from sklearn.tree import DecisionTreeRegressor
+from sklearn import tree
+# Prepare the data data
+boston = datasets.load_boston() # <class 'sklearn.utils.Bunch'>
+X = boston.data # <class 'numpy.ndarray'>
+y = boston.target # <class 'numpy.ndarray'>
+# To keep the size of the tree small, I set max_depth = 3.
+# Fit the regressor, set max_depth = 3
+regr = DecisionTreeRegressor(max_depth=3, random_state=1234)
+regr.fit(X, y)
+
+# METHOD1:
+text_representation = tree.export_text(regr)
+print(text_representation)
+
+# METHOD2:
+fig = plt.figure(figsize=(20,10))
+_ = tree.plot_tree(regr, feature_names=boston.feature_names, filled=True)
 # ********************************************************************************************************************
-
-
-
-
-
 
 
 
