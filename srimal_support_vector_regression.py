@@ -19,7 +19,15 @@ sc_X = StandardScaler()
 X_train = sc_X.fit_transform(X_train)
 X_test = sc_X.transform(X_test)
 sc_y = StandardScaler()
-y_train = sc_y.fit_transform(y_train)"""
+y_train = sc_y.fit_transform(y_train)
+
+Alternatively we can Scale first for X, y and then test split it
+from sklearn.preprocessing import StandardScaler
+sc_X = StandardScaler()
+sc_y = StandardScaler()
+X = sc_X.fit_transform(X)
+y = sc_y.fit_transform(y)
+"""
 
 # Fitting the Regression Model to the dataset
 # Create your regressor here
