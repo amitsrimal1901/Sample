@@ -522,6 +522,7 @@ import pandas as pd
 
 # Importing the dataset
 dataset = pd.read_csv('C:/Users/amit_srimal/Documents/Study/Python/Files/Position_Salaries.csv')
+#dataset = pd.read_csv('https://raw.githubusercontent.com/amitsrimal1901/Machine_Learning_A-Z/master/Part%201%20-%20Data%20Preprocessing/Data.csv')
 X = dataset.iloc[:, 1:2].values  # numpy array
 y = dataset.iloc[:, 2].values #  # numpy array
 
