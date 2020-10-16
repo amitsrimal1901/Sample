@@ -79,11 +79,13 @@ ct = ColumnTransformer(
     [('one_hot_encoder', OneHotEncoder(), [0])],    # The column numbers to be transformed (here is [0] but can be [0, 1, 3])
     remainder='passthrough')                      # Leave the rest of the columns untouched
 X = np.array(ct.fit_transform(X), dtype=np.float) # gets to create addtiona columns based on categorical code 1/2/3 etc
-#OTE: This take care of dummy variable trap hecne wno need to remove explicityl
-# Earlier X had 3 columns, now after fit+transfoorm by functin its 5.
-# Country code 0,1,2, hencetoavoid dummy trao 2 coulmn are ADDED making it 3+2 as 5.
-# Encoding the Dependent Variable
+#NOTE: This creates dummy variable and we need to remove it EXPLICITLY
+# Country code 0,1,2, hence 3 columns are added to show country, instead of single country column
 
+# Avoiding the Dummy Variable Trap by dropping any of the column say 0th column in our case
+X = X[:, 1:] #<class 'numpy.ndarray'> having shape (4 olumns instead of 5 columns earlier )
+
+# Encoding the Dependent Variable
 # Similarly Labelling for TARGET variable, no encoding needed as its a single column only
 labelencoder_y = LabelEncoder()
 y = labelencoder_y.fit_transform(y)
