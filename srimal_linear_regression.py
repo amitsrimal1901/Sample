@@ -889,23 +889,18 @@ y = dataset.iloc[:, 4].values # y.shape is (50,) PROFIT VALUES
 type(X) # <class 'numpy.ndarray'>
 
 # Encoding categorical data
-""" This way of Encoding is deprecated now
 from sklearn.preprocessing import LabelEncoder, OneHotEncoder
+#Step1: Encoding the categorcial data
 labelencoder = LabelEncoder() # <class 'sklearn.preprocessing._label.LabelEncoder'>
-X[:, 3] = labelencoder.fit_transform(X[:, 3]) # encoding all values of column 3 called CITY in X
+X[:, 3] = labelencoder.fit_transform(X[:, 3]) # encoding all values of column 3 called CITY in X as 0/1/2
 # Above operation assigns integer value code to CITY
-
-onehotencoder = OneHotEncoder(categorical_features = [3])
-X = onehotencoder.fit_transform(X).toarray()"""
-# Lets encode with new approach
+#Step2: Creating dummy variables
 from sklearn.preprocessing import OneHotEncoder
 from sklearn.compose import ColumnTransformer
 
 ct = ColumnTransformer(
     [('one_hot_encoder', OneHotEncoder(), [3])],    # The column numbers to be transformed (here is [0] but can be [0, 1, 3])
-    remainder='passthrough'                         # Leave the rest of the columns untouched
-)
-
+    remainder='passthrough')                       # Leave the rest of the columns untouched
 X = np.array(ct.fit_transform(X), dtype=np.float)
 type(X) #<class 'numpy.ndarray'>
 X.shape # (50,6)
