@@ -65,12 +65,12 @@ In order to overcome the problem of multicollinearity, one of the dummy variable
     2. The number of categorical features is less so one-hot encoding can be effectively applied
 """
 # Encoding the Independent Variable
-from sklearn.preprocessing import LabelEncoder, OneHotEncoder
+from sklearn.preprocessing import LabelEncoder
 #Step1: Encoding the categorcial data
 labelencoder_X = LabelEncoder()
 X[:, 0] = labelencoder_X.fit_transform(X[:, 0]) # applied labelEncoder to NO-ORDINAL data country here
 # COuntry gets 0/1/2/ type of categorial values
-#nehotencoder = OneHotEncoder(categorical_features = [0])
+#Onehotencoder = OneHotEncoder(categorical_features = [0])
 #X = onehotencoder.fit_transform(X).toarray()
 #Step2: Creating dummy variables
 from sklearn.preprocessing import OneHotEncoder
