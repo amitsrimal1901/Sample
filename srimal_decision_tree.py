@@ -508,6 +508,13 @@ if __name__=="__main__":
 # Decison Tree Regression
 #https://github.com/amitsrimal1901/Machine_Learning_A-Z/blob/master/Part%202%20-%20Regression/Section%208%20-%20Decision%20Tree%20Regression/regression_template.py
 
+"""
+The decision trees is used to fit a sine curve with addition noisy observation. 
+As a result, it learns local linear regressions approximating the sine curve.
+We can see that if the maximum depth of the tree (controlled by the max_depth parameter) is set too high, 
+the decision trees learn too fine details of the training data and learn from the noise, i.e. they overfit.
+"""
+
 # Importing the libraries
 import numpy as np
 import matplotlib.pyplot as plt

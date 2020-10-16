@@ -55,3 +55,6 @@ plt.title('Truth or Bluff (Regression Model)')
 plt.xlabel('Position level')
 plt.ylabel('Salary')
 plt.show()"""
+
+import srimal_linear_regression
+print(srimal_linear_regression.__doc__)
