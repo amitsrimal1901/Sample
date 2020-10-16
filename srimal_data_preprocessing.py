@@ -82,12 +82,12 @@ X = np.array(ct.fit_transform(X), dtype=np.float) # gets to create addtiona colu
 #NOTE: This creates dummy variable and we need to remove it EXPLICITLY
 # Country code 0,1,2, hence 3 columns are added to show country, instead of single country column
 
-# Avoiding the Dummy Variable Trap by dropping any of the column say 0th column in our case
+#Avoiding the Dummy Variable Trap by dropping any of the column say 0th column in our case
 X = X[:, 1:] #<class 'numpy.ndarray'> having shape (4 olumns instead of 5 columns earlier )
 
 # Encoding the Dependent Variable
 # Similarly Labelling for TARGET variable, no encoding needed as its a single column only
 labelencoder_y = LabelEncoder()
-y = labelencoder_y.fit_transform(y)
+y = labelencoder_y.fit_transform(y) # o/1 for the case of TRUE/ FALSE
 
 #*******************************************************************************
