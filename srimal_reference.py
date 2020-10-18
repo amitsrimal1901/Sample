@@ -70,6 +70,8 @@ for r in radii:
 
 #_______________________________________________________________________________
 ### DIFFERENCE betwen LOC,ILOC utilities
+# loc is label-based, which means that you have to specify rows and columns based on their row and column labels.
+# iloc is integer index based, so you have to specify rows and columns by their integer index
 import pandas as pd
 ss= pd.read_excel('/home/akmsrimal/Downloads/Sample - Superstore.xls', index_col=None)
 ss.head()

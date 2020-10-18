@@ -191,10 +191,7 @@ Keep in mind that logistic regression is essentially a linear classifier, so you
 """
 
 
-
-
-
-
+#MORE READING FROM REALPYTHONPROGRAMMING
 
 # #*************************************************************************************************************************
 ## Logistic regression on Edureka## 
@@ -209,7 +206,7 @@ Keep in mind that logistic regression is essentially a linear classifier, so you
 #LOGISTIC:  log(y/1-y)=d+n1x1+n2m2+..... hence range is0 to 1.
 
 ## TITANIC data set ------------------------------------------------------------
-# what factors made eople more likely of surviving the sinking
+# what factors made people more likely of surviving the sinking
 # Steps of logistic Regression:
     # Step1: Collecting & analysing data
     # Step2: data wrangling
@@ -221,21 +218,23 @@ import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt
 import math
-from sklearn.cross_validation import train_test_split
+from sklearn.model_selection import train_test_split
 from sklearn import linear_model 
 ## collecting & analysisng data
-titanic_data= pd.read_csv("C:/Users/Amit Srimal/Desktop/DET/ML/Data/Titanic/train.csv")
+titanic_data= pd.read_csv("C:/Users/amit_srimal/Documents/Study/Python/Files/titanic_train.csv")
 titanic_data.head(10) # ten first rows of titanic data
-
+"""
 ## splitting 'name' column into first&lastname
-titanic_data.loc[titanic_data['Embarked']=='S']
-titanic_data.loc[titanic_data['Name']] # getting name dataframe here
+titanic_data.set_index('Embarked', inplace=True)
+titanic_data.loc['S']  # 644 embarked from S out of 891 people record, Q 77 & C has 168
+titanic_data.loc[titanic_data['Name']] # getting name dataframe here""""
 
 pass_name= titanic_data.iloc[:,3] # creating data frame of name from parentdataframe
 pass_name=pass_name.str.split(',',n=1,expand=True)
-pass_name.columns=['firstName','lastName'] # renaming column names frpm 0 & 1
+pass_name.columns=['firstName','lastName'] # renaming column names from 0 & 1
 print(pass_name.columns) # first & last name
 
+##FREQUENCY PLOT
 #plotting Emarked status
 sns.countplot(x='Embarked', data=titanic_data)
 sns.countplot(x='Embarked',hue='Pclass', data=titanic_data)
@@ -244,11 +243,13 @@ sns.countplot(x='Survived', data=titanic_data)
 #plotting genderwise for survival
 sns.countplot(x='Survived',hue='Sex', data=titanic_data) 
 sns.countplot(x='Sex',hue='Survived', data=titanic_data) #swapping the gender & survival
-sns.countplot(x='Survived',hue='Pclass', data=titanic_data) # plotting survival with passenger class
+sns.countplot(x='Survived',hue='Embarked', data=titanic_data) # plotting survival with passenger class
+##HISTOGRAM PLOT
 titanic_data["Age"].plot.hist() # age plot for data
 titanic_data["Fare"].plot.hist() # fare plot for data
 titanic_data["Fare"].plot.hist(binsize=20,figsize=(10,5)) # chnaging bin figure size for plot
 #getting insights into the data information
+titanic_data.describe()
 titanic_data.info()
 sns.countplot(x='SibSp',data=titanic_data) # plot for sibling & spouse
 sns.countplot(x='Parch',data=titanic_data) # plot for parent & children
@@ -552,10 +553,98 @@ plt.show()
 # The dotted line represents the ROC curve of a purely random classifier
 # a good classifier stays as far away from that line as possible (toward the top-left corner)
 
+#**************************************************************************************************************
+#GUTHUB: https://github.com/amitsrimal1901/Machine_Learning_A-Z/tree/master/Part%203%20-%20Classification/Section%2014%20-%20Logistic%20Regression
 
+#PROBLEM: predict if a customer will buy ot not given his gender, age and salary
 
+# Importing the libraries
+import numpy as np
+import matplotlib.pyplot as plt
+import pandas as pd
 
+# Importing the dataset
+dataset = pd.read_csv('https://raw.githubusercontent.com/amitsrimal1901/Machine_Learning_A-Z/master/Part%203%20-%20Classification/Section%2014%20-%20Logistic%20Regression/Social_Network_Ads.csv')
+X = dataset.iloc[:, [2, 3]].values # Age, Salary
+y = dataset.iloc[:, 4].values # Buy yes/no
 
+# Splitting the dataset into the Training set and Test set
+from sklearn.model_selection import train_test_split
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.25, random_state = 0) # 300 train, 100 test
+
+# Feature Scaling
+from sklearn.preprocessing import StandardScaler
+sc = StandardScaler()
+X_train = sc.fit_transform(X_train)
+X_test = sc.transform(X_test)
+
+# Fitting Logistic Regression to the Training set
+from sklearn.linear_model import LogisticRegression
+classifier = LogisticRegression(random_state = 0)
+classifier.fit(X_train, y_train)
+"""
+Random state ensures that the splits that you generate are reproducible. Scikit-learn uses random permutations to generate the splits. 
+The random state that you provide is used as a seed to the random number generator. 
+This ensures that the random numbers are generated in the same order.
+"""
+# Predicting the Test set results
+y_pred = classifier.predict(X_test)
+
+# accuracy of model
+from sklearn.metrics import accuracy_score
+score =accuracy_score(y_test,y_pred) # 89% score
+
+"""
+# Predicting buy Yes/ No for a given Age, Salary
+age=int(input("Enter Age: "))
+sal= int(input("Enter Salary: "))
+test_data_by_user= np.array([age,sal]).reshape(1,-1)
+print(type(test_data_by_user))
+Prob_of_Purchase = classifier.predict(test_data_by_user)
+print(Prob_of_Purchase)
+"""
+
+# Making the Confusion Matrix
+from sklearn.metrics import confusion_matrix
+cm = confusion_matrix(y_test, y_pred)
+
+# Visualising the Training set results
+from matplotlib.colors import ListedColormap
+X_set, y_set = X_train, y_train
+X1, X2 = np.meshgrid(np.arange(start = X_set[:, 0].min() - 1, stop = X_set[:, 0].max() + 1, step = 0.01),
+                     np.arange(start = X_set[:, 1].min() - 1, stop = X_set[:, 1].max() + 1, step = 0.01))
+plt.contourf(X1, X2, classifier.predict(np.array([X1.ravel(), X2.ravel()]).T).reshape(X1.shape),
+             alpha = 0.75, cmap = ListedColormap(('red', 'green')))
+plt.xlim(X1.min(), X1.max())
+plt.ylim(X2.min(), X2.max())
+for i, j in enumerate(np.unique(y_set)):
+    plt.scatter(X_set[y_set == j, 0], X_set[y_set == j, 1],
+                c = ListedColormap(('red', 'green'))(i), label = j)
+plt.title('Logistic Regression (Training set)')
+plt.xlabel('Age')
+plt.ylabel('Estimated Salary')
+plt.legend()
+plt.show()
+
+# Visualising the Test set results
+from matplotlib.colors import ListedColormap
+X_set, y_set = X_test, y_test
+X1, X2 = np.meshgrid(np.arange(start = X_set[:, 0].min() - 1, stop = X_set[:, 0].max() + 1, step = 0.01),
+                     np.arange(start = X_set[:, 1].min() - 1, stop = X_set[:, 1].max() + 1, step = 0.01))
+plt.contourf(X1, X2, classifier.predict(np.array([X1.ravel(), X2.ravel()]).T).reshape(X1.shape),
+             alpha = 0.75, cmap = ListedColormap(('red', 'green')))
+plt.xlim(X1.min(), X1.max())
+plt.ylim(X2.min(), X2.max())
+for i, j in enumerate(np.unique(y_set)):
+    plt.scatter(X_set[y_set == j, 0], X_set[y_set == j, 1],
+                c = ListedColormap(('red', 'green'))(i), label = j)
+plt.title('Logistic Regression (Test set)')
+plt.xlabel('Age')
+plt.ylabel('Estimated Salary')
+plt.legend()
+plt.show()
+
+#**************************************************************************************************************************
 
 
 
