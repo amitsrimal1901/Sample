@@ -269,6 +269,8 @@ sns.heatmap(titanic_data.isnull(),yticklabels=False,cbar=False) # this has ZERO 
 titanic_data.isnull().sum() # check for sum of NULL
 titanic_data.info() # earlier 891 & now 712 rows
 ## next we need to convert string to categorical like name,sex field etc.
+
+#ENCODING being done for Categorical data like SEX, PCLASS, EMABRKED; followed by dummy variable removal
 pd.get_dummies(titanic_data['Sex'])
 sex=pd.get_dummies(titanic_data['Sex'],drop_first=True) # male is 1 &female is 0
 embark=pd.get_dummies(titanic_data['Embarked'])
@@ -277,6 +279,7 @@ embark=pd.get_dummies(titanic_data['Embarked'],drop_first=True)
 embark.head(10)
 Pcl=pd.get_dummies(titanic_data['Pclass'],drop_first=True)
 Pcl.head(10)
+
 ## Next we need to concatenate these columns
 titanic_data=pd.concat([titanic_data,sex,embark,Pcl],axis=1)
 # lets drop duplicated column +other which are not needed as below
