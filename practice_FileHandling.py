@@ -115,8 +115,3 @@ with open(file_name,'w') as csv_file_to_read:
     csvwriter.writerow(fields)
     # writing the data rows into objects
     csvwriter.writerows(data)
-
-
-
-
-
