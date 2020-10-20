@@ -1,8 +1,7 @@
 """
-Each line of code includes a sequence of characters and they form text file.
+EACH line of code includes a sequence of characters and they form text file.
 Each line of a file is terminated with a special character, called the EOL or End of Line characters like comma {,} or newline character.
-It ends the current line and tells the interpreter a new one has begun.
-"""
+It ends the current line and tells the interpreter a new one has begun."""
 # open () function in Python to open a file in read or write mode.
 # open() function along with two arguments, that accepts file name and the mode, whether to read or write.
 """
@@ -115,8 +114,3 @@ with open(file_name,'w') as csv_file_to_read:
     csvwriter.writerow(fields)
     # writing the data rows into objects
     csvwriter.writerows(data)
-
-
-
-
-
