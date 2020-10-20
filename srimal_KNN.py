@@ -126,8 +126,15 @@ print(classes[y_predict[1]]) # prediction is setosa
 """
 K-NN is a non-parametric and lazy learning algorithm. 
 Non-parametric means there is no assumption for underlying data distribution i.e. the model structure determined from the dataset.
-Lazy algorithm because it does not need any training data points for model generation. All training data is used in the testing phase which makes training faster and testing phase slower and costlier.
+Lazy algorithm because it does not need any training data points for model generation. 
+All training data is used in the testing phase which makes training faster and testing phase slower and costlier.
 K-Nearest Neighbor (K-NN) is a simple algorithm that stores all the available cases and classifies the new data or case based on a similarity measure.
+
+LAZY vs EAGER LEARNER:
+An eager learner has a model fitting or training step. A lazy learner does not have a training phase.
+K-NN is a lazy learner because it doesn’t learn a discriminative function from the training data but “memorizes” the training dataset instead.
+For example, the logistic regression algorithm learns its model weights (parameters) during training time. In contrast, there is no training time in K-NN. 
+
 
 In K-NN classification, the output is a class membership. 
 An object is classified by a plurality vote of its neighbors, with the object being assigned to the class most common among its k nearest neighbors (k is a positive integer, typically small). 
@@ -267,30 +274,81 @@ data = pd.read_csv('https://raw.githubusercontent.com/adityakumar529/Coursera_Ca
 # There are some factors where the values cannot be zero. Glucose values, for example, cannot be 0 for a human.
 # Similarly, BloodPressure, SkinThickness, Insulin, and BMI cannot be zero for a human.
 
-non_zero = ['Glucose','BloodPressure','SkinThickness','Insulin','BMI']
+non_zero = ['Glucose','BloodPressure','SkinThickness','Insulin','BMI']  # list
 for column in non_zero:
     data[column] = data[column].replace(0,np.NaN)
     mean = int(data[column].mean(skipna = True))
     data[column] = data[column].replace(np.NaN, mean)
     print(data[column])
 
-# sub plotting
 #We have defined non_zero with the column where the values cannot be zero.
 #In each column we will first check if we have 0 values. Then we replace it with NaN.
 #Later we are creating a meaning of the column and replacing the earlier with mean.
+#OVERALL OUTCOME: we get to replace the 0 values in each cilumn by mean value in each column
 
+#plotting
 import seaborn as sns
 p=sns.pairplot(data, hue = 'Outcome')
 
-# geting fecthing and sample name
+# Identifying target , features from data
+X =data.iloc[:,0:8].values # array
+y =data.iloc[:,8].values  # array
+# Creating test ,training data now
+from sklearn.model_selection import train_test_split
+X_train,X_test,y_train, y_test = train_test_split(X, y, test_size=0.2,random_state=0, stratify=y) # all these are arrays
 
+# #feature Scaling
+sc_X = StandardScaler()
+X_train = sc_X.fit_transform(X_train)
+X_test = sc_X.transform(X_test)
 
+#Now lets try to set value of K in KNN Model
+import math
+math.sqrt(len(y_test)) # 12.409673645990857
+# NOTE: We have taken this value to get the value of K. We need an odd value of K, so we will make it 12–1 or 12+1.
+# It is advisible to take odd values for binary classification to avoid the ties i.e. two classes labels achieving the same score
+"""
+The optimal K value usually found is the square root of N, where N is the total number of samples
+Finding the value of k is not easy. A small value of k means that noise will have a higher influence on the result and a large value make it computationally expensive.
+Data scientists usually choose as an odd number if the number of classes is 2 and another simple approach to select k is set k=sqrt(n).
+"""
 
+# NOw we create the KNN clasifier
+classifier = KNeighborsClassifier(n_neighbors=13,p=2,metric='euclidean')
+classifier.fit(X_train,y_train) #KNeighborsClassifier(metric='euclidean', n_neighbors=13)
 
+# Let’s predict our data using classifier predict.
+y_pred =  classifier.predict(X_test)
+y_pred # array of size 154
 
+# predicting for a asked set of parameters
+# say user i/p array is ip= np.array([2,56,56,28,45,24.3,.3320,22])
+#  y_test is 0 in defined data set
+#lets check what our model predicts
+test_ip_0= np.array([2,56,56,28,45,24.3,.3320,22]) # assuming this is user i/p for all required fields to ZERO output
+y_for_ip_0= classifier.predict([test_ip_0])
+print(y_for_ip_0) # o/p is [0]
 
+test_ip_1= np.array([7,196,90,29,155,39.8,.45100,41]) # assuming this is user i/p for all required fields to ZERO output
+y_for_ip_1= classifier.predict([test_ip_1])
+print(y_for_ip_1) # o/p is [1]
 
+# Lets check model accuracy & other performance thngs
+from sklearn.metrics import confusion_matrix
+cm= confusion_matrix(y_test,y_pred)
+print(f1_score(y_test,y_pred)) # 0.6326530612244898
+print(accuracy_score(y_test,y_pred)) # 0.7662337662337663
 
+## PLOTTING
+import matplotlib.pyplot as plt
+plt.figure(figsize=(5, 7))
+ax = sns.distplot(data['Outcome'], hist=False, color="r", label="Actual Value")
+sns.distplot(y_pred, hist=False, color="b", label="Predicted Values", ax=ax)
+plt.title('Actual vs Precited value for outcome')
+plt.show()
+plt.close()
+
+#************************************************************************************************************************
 
 
 
