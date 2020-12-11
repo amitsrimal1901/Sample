@@ -15,7 +15,7 @@
 
 ##Components of NLP:    
     #1. Natural Language undersatdning
-    #2. Natural Language Generation
+    #2. Natural Language Generation NLG
     
 ## Steps of NLP:
     #Step1: Tokenization: say breaking complete sentence in words 
