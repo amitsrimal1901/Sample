@@ -11,7 +11,7 @@
     #5. Spell Check
     #6. Keyword search
     #7. Infirmation extraction
-    #8. Advertsiement matching: recommending ads based on history.
+    #8. Advertsiement  matching: recommending ads based on history.
 
 ##Components of NLP:    
     #1. Natural Language undersatdning
